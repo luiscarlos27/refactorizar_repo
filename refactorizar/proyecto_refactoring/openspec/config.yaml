@@ -1,0 +1,25 @@
+schema: spec-driven
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+context: |
+  Proyecto educativo Python: aplicación CLI de películas y series (OMDB + TVMaze).
+  Tech stack: Python 3.11+, requests, pytest, mypy (strict), ruff, black.
+  Estado actual (a refactorizar): 118 archivos .py (~19.100 líneas), 90 *_config.py
+  (código muerto), 23 *_manager.py (muchos duplicados), 0 tests, sin git.
+  Solo los módulos main.py y api_movies.py se importan entre sí; el resto es
+  código muerto o duplicados (logger.py vs log_manager.py vs log_config.py,
+  config_manager.py vs config_manager_v2.py, app.py vs main.py).
+  Idiomas de artefactos: español. El flujo usa OpenSpec spec-driven
+  (proposal -> specs -> design -> tasks), 1 change por fase (6 fases).
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
