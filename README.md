@@ -83,8 +83,27 @@ Objetivo general: **convertir código legacy no mantenible en un proyecto estruc
 | **OpenSpec** | Flujo *spec-driven*: cada fase de refactoring es un "change" con `proposal → specs → design → tasks` |
 | **SDD** (Spec-Driven Development) | Las especificaciones dirigen el código; los requisitos se escriben en formato EARS |
 | **opencode** | Asistente de IA (agentes + skills) que ejecuta los cambios |
+| **Skills de opencode** | 66 skills instaladas localmente en `.opencode/skills/` |
 | **Git / GitHub** | Versionado e historial; rollback por `git checkout` de la fase previa |
 | Mermaid | Diagramas de flujo y arquitectura en la documentación |
+
+### Skills de opencode instaladas (`.opencode/skills/`)
+
+El proyecto tiene **66 skills** de opencode instaladas localmente que guían la ejecución del refactoring. Las de mayor relevancia para este repo:
+
+| Skill | Uso en el proyecto |
+|---|---|
+| `legacy-modernizer` | Estrategia incremental para modernizar el código legacy (flujo *branch by abstraction*) |
+| `spec-miner` | Ingeniería inversa: extraer especificaciones del código original (análisis de `main.py`/`api_movies.py`) |
+| `code-reviewer` | Revisión de diffs y detección de *code smells* al avanzar por fases |
+| `test-master` | Diseño de la suite `pytest` (fase 6) y estrategia de cobertura |
+| `python-pro` | Estándares Python 3.11+, type hints y buenas prácticas |
+| `debugging-wizard` | Diagnóstico de errores durante la migración |
+| `secure-code-guardian` | Seguridad (fase 5): validación de entrada, manejo de claves |
+| `prompt-engineer` | Redacción de prompts estructurados para guiar a la IA |
+| `the-fool` | Crítica estructurada / *red team* de las decisiones de diseño |
+
+> La librería de origen con todos los SKILL.md se incluye también en el repo en `refactorizar/opencode-skills/opencode-skills-main/`. La carpeta local `.opencode/` queda excluida del control de versiones (`.gitignore`).
 
 ---
 
@@ -228,6 +247,7 @@ flowchart TB
 refactorizar_repo/
 ├── README.md                        # Este documento
 ├── .gitignore
+├── .opencode/skills/                # 66 skills de opencode (local, ignorado por git)
 ├── factorizar/                      # Ejemplos refactorizados con tests
 │   ├── src/purchase_processor.py
 │   ├── src/sensor_telemetry.py
