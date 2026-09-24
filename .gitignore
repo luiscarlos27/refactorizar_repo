@@ -1,4 +1,5 @@
 __pycache__/
 *.pyc
 .opencode/
-*.log.coverage
+*.log
+.coverage
