@@ -103,7 +103,7 @@ El proyecto tiene **66 skills** de opencode instaladas localmente que guían la 
 | `prompt-engineer` | Redacción de prompts estructurados para guiar a la IA |
 | `the-fool` | Crítica estructurada / *red team* de las decisiones de diseño |
 
-> La librería de origen con todos los SKILL.md se incluye también en el repo en `refactorizar/opencode-skills/opencode-skills-main/`. La carpeta local `.opencode/` queda excluida del control de versiones (`.gitignore`).
+> Las skills instaladas provienen de la librería **[jeffallan/opencode-skills](https://github.com/jeffallan/opencode-skills)** (v0.5.0, 66 skills). La carpeta local `.opencode/` queda excluida del control de versiones (`.gitignore`).
 
 ---
 
@@ -258,8 +258,8 @@ refactorizar_repo/
 │   │   ├── codigo_muerto_bak/       # Backup de los 116 módulos eliminados
 │   │   ├── openspec/                # Capacidades + changes de cada fase
 │   │   ├── docs/analisis.md         # Hallazgos de la fase 1
+│   │   ├── docs/informe-ejecutivo.md  # Informe ejecutivo fases 1-4
 │   │   └── pyproject.toml
-│   └── opencode-skills/             # Librería de skills para opencode
 ├── nomina1.py                       # Ejercicio nómina (a refactorizar)
 ├── nomina1_optimized.py             # Versión optimizada (Python puro)
 ├── benchmark_payroll.py / benchmark_report.md / benchmark_results.json
@@ -301,7 +301,9 @@ python benchmark_payroll.py             # Benchmark comparativo
 |---|---|---|
 | 1 — Análisis del código | `fase-1-analisis-codigo` | Archivado |
 | 2 — Reestructuración básica | `fase-2-reestructuracion-basica` | Archivado |
-| 3 — Separación de responsabilidades | `fase-3-separacion-responsabilidades` | En curso |
-| 4 — Manejo de errores | `fase-4-manejo-errores` | Pendiente |
+| 3 — Separación de responsabilidades | `fase-3-separacion-responsabilidades` | Archivado |
+| 4 — Manejo de errores | `fase-4-manejo-errores` | Archivado |
 | 5 — Seguridad | `fase-5-seguridad` | Pendiente |
 | 6 — Testing | `fase-6-testing` | Pendiente |
+
+📈 [Informe ejecutivo fases 1-4](refactorizar/proyecto_refactoring/docs/informe-ejecutivo.md): qué se realizó y qué se mejoró.
