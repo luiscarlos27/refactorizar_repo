@@ -1,6 +1,4 @@
 import os
-import json
-import time
 from datetime import datetime
 
 # Variables globales
@@ -18,13 +16,13 @@ def write_log(message, level="INFO", log_file=None):
     """Escribe mensaje de log"""
     if log_file is None:
         log_file = LOG_FILE
-    
+
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = timestamp + " [" + level + "] " + message + "\n"
-    
+
     with open(log_file, 'a') as f:
         f.write(log_entry)
-    
+
     # También imprimir a consola si es debug
     if level == "DEBUG":
         print(log_entry.strip())
@@ -63,22 +61,22 @@ def get_log_content(log_file=None):
     """Obtiene contenido de log"""
     if log_file is None:
         log_file = LOG_FILE
-    
+
     if os.path.exists(log_file):
-        with open(log_file, 'r') as f:
+        with open(log_file) as f:
             return f.readlines()
-    
+
     return []
 
 def search_logs(pattern, log_file=None):
     """Busca en logs"""
     lines = get_log_content(log_file)
     results = []
-    
+
     for line in lines:
         if pattern in line:
             results.append(line.strip())
-    
+
     return results
 
 def get_log_stats():
@@ -91,11 +89,11 @@ def get_log_stats():
         "error": 0,
         "critical": 0
     }
-    
+
     for log_file in [LOG_FILE, ERROR_LOG_FILE, DEBUG_LOG_FILE]:
         lines = get_log_content(log_file)
         stats["total_lines"] += len(lines)
-        
+
         for line in lines:
             if "[DEBUG]" in line:
                 stats["debug"] += 1
@@ -107,13 +105,13 @@ def get_log_stats():
                 stats["error"] += 1
             elif "[CRITICAL]" in line:
                 stats["critical"] += 1
-    
+
     return stats
 
 def export_logs(filename, log_file=None):
     """Exporta logs a archivo"""
     lines = get_log_content(log_file)
-    
+
     with open(filename, 'w') as f:
         for line in lines:
             f.write(line)
@@ -123,7 +121,7 @@ def rotate_logs(max_size_mb=10):
     for log_file in [LOG_FILE, ERROR_LOG_FILE, DEBUG_LOG_FILE]:
         if os.path.exists(log_file):
             size_mb = os.path.getsize(log_file) / (1024 * 1024)
-            
+
             if size_mb > max_size_mb:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 new_filename = log_file + "." + timestamp
@@ -139,22 +137,22 @@ def filter_logs_by_level(level, log_file=None):
     """Filtra logs por nivel"""
     lines = get_log_content(log_file)
     filtered = []
-    
+
     for line in lines:
         if "[" + level.upper() + "]" in line:
             filtered.append(line.strip())
-    
+
     return filtered
 
 def filter_logs_by_date(date_str, log_file=None):
     """Filtra logs por fecha"""
     lines = get_log_content(log_file)
     filtered = []
-    
+
     for line in lines:
         if date_str in line:
             filtered.append(line.strip())
-    
+
     return filtered
 
 def parse_log_line(line):
@@ -169,7 +167,7 @@ def parse_log_line(line):
             }
     except:
         pass
-    
+
     return {"timestamp": "", "level": "", "message": line}
 
 def create_log_entry(timestamp, level, message):
@@ -189,7 +187,7 @@ def validate_log_format(line):
                 return True
     except:
         pass
-    
+
     return False
 
 # Inicializar directorio

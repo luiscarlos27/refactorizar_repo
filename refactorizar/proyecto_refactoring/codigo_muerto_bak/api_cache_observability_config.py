@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_observability_config = {}
 def load_api_cache_observability_config():
     """Carga configuración de observabilidad de caché de API"""
     global api_cache_observability_config
-    
+
     if os.path.exists(API_CACHE_OBSERVABILITY_CONFIG_FILE):
-        with open(API_CACHE_OBSERVABILITY_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_OBSERVABILITY_CONFIG_FILE) as f:
             api_cache_observability_config = json.load(f)
     else:
         api_cache_observability_config = {
@@ -115,9 +114,9 @@ def export_api_cache_observability_config(filename):
 def import_api_cache_observability_config(filename):
     """Importa configuración de observabilidad de caché de API"""
     global api_cache_observability_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_observability_config = json.load(f)
         save_api_cache_observability_config()
         return True
@@ -126,12 +125,12 @@ def import_api_cache_observability_config(filename):
 def validate_api_cache_observability_config():
     """Valida configuración de observabilidad de caché de API"""
     errors = []
-    
+
     for key in ["enabled", "metrics_collection", "distributed_tracing", "health_checks"]:
         if key in api_cache_observability_config:
             if not isinstance(api_cache_observability_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_api_cache_observability_config():

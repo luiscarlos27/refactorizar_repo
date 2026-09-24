@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_auth_config = {}
 def load_api_auth_config():
     """Carga configuración de autenticación de API"""
     global api_auth_config
-    
+
     if os.path.exists(API_AUTH_CONFIG_FILE):
-        with open(API_AUTH_CONFIG_FILE, 'r') as f:
+        with open(API_AUTH_CONFIG_FILE) as f:
             api_auth_config = json.load(f)
     else:
         api_auth_config = {
@@ -100,9 +99,9 @@ def export_api_auth_config(filename):
 def import_api_auth_config(filename):
     """Importa configuración de autenticación de API"""
     global api_auth_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_auth_config = json.load(f)
         save_api_auth_config()
         return True
@@ -111,15 +110,15 @@ def import_api_auth_config(filename):
 def validate_api_auth_config():
     """Valida configuración de autenticación de API"""
     errors = []
-    
+
     if "enabled" in api_auth_config:
         if not isinstance(api_auth_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     if "token_expiry" in api_auth_config:
         if not isinstance(api_auth_config["token_expiry"], int):
             errors.append("token_expiry must be integer")
-    
+
     return errors
 
 def backup_api_auth_config():

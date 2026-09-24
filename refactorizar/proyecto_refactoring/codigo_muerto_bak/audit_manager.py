@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ audit_log = []
 def load_audit_log():
     """Carga registro de auditoría"""
     global audit_log
-    
+
     if os.path.exists(AUDIT_FILE):
-        with open(AUDIT_FILE, 'r') as f:
+        with open(AUDIT_FILE) as f:
             audit_log = json.load(f)
     else:
         audit_log = []
@@ -75,11 +74,11 @@ def search_audit_log(query):
     """Busca en registro de auditoría"""
     results = []
     query_lower = query.lower()
-    
+
     for entry in audit_log:
         if query_lower in entry.get("action", "").lower():
             results.append(entry)
-    
+
     return results
 
 def clear_audit_log():
@@ -96,17 +95,17 @@ def get_audit_stats():
         "by_user": {},
         "by_date": {}
     }
-    
+
     for entry in audit_log:
         action = entry.get("action", "unknown")
         stats["by_action"][action] = stats["by_action"].get(action, 0) + 1
-        
+
         user = entry.get("user", "unknown")
         stats["by_user"][user] = stats["by_user"].get(user, 0) + 1
-        
+
         date = entry["timestamp"].split(" ")[0]
         stats["by_date"][date] = stats["by_date"].get(date, 0) + 1
-    
+
     return stats
 
 def export_audit_log(filename):
@@ -117,9 +116,9 @@ def export_audit_log(filename):
 def import_audit_log(filename):
     """Importa registro de auditoría"""
     global audit_log
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             audit_log = json.load(f)
         save_audit_log()
         return True
@@ -128,7 +127,7 @@ def import_audit_log(filename):
 def validate_audit_log():
     """Valida integridad del registro"""
     errors = []
-    
+
     for i, entry in enumerate(audit_log):
         if "id" not in entry:
             errors.append("Entry " + str(i) + " missing id")
@@ -136,7 +135,7 @@ def validate_audit_log():
             errors.append("Entry " + str(i) + " missing action")
         if "timestamp" not in entry:
             errors.append("Entry " + str(i) + " missing timestamp")
-    
+
     return errors
 
 def backup_audit_log():

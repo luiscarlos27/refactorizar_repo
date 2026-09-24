@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ email_config = {}
 def load_email_config():
     """Carga configuración de email"""
     global email_config
-    
+
     if os.path.exists(EMAIL_CONFIG_FILE):
-        with open(EMAIL_CONFIG_FILE, 'r') as f:
+        with open(EMAIL_CONFIG_FILE) as f:
             email_config = json.load(f)
     else:
         email_config = {
@@ -111,9 +110,9 @@ def export_email_config(filename):
 def import_email_config(filename):
     """Importa configuración de email"""
     global email_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             email_config = json.load(f)
         save_email_config()
         return True
@@ -122,11 +121,11 @@ def import_email_config(filename):
 def validate_email_config():
     """Valida configuración de email"""
     errors = []
-    
+
     if "smtp_port" in email_config:
         if not isinstance(email_config["smtp_port"], int):
             errors.append("smtp_port must be integer")
-    
+
     return errors
 
 def backup_email_config():

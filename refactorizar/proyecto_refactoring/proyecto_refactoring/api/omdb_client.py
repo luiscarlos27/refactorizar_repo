@@ -5,7 +5,7 @@ from typing import Any, cast
 import pybreaker
 import requests
 from config import AppConfig
-from constants import OMDB_API_KEY, OMDB_BASE_URL
+from constants import OMDB_BASE_URL
 from exceptions import ApiClientError, NetworkError
 from logging_config import get_logger
 from tenacity import Retrying, retry_if_exception_type, stop_after_attempt, wait_exponential
@@ -18,10 +18,12 @@ class OmdbClient:
 
     Args:
         config: Configuracion inyectada (timeout, retries, throttle).
+        api_key: Clave de OMDB inyectada desde el entorno (composition root).
     """
 
-    def __init__(self, config: AppConfig) -> None:
+    def __init__(self, config: AppConfig, api_key: str) -> None:
         self._config = config
+        self._api_key = api_key
         self._breaker = pybreaker.CircuitBreaker(
             fail_max=config.circuit_fail_max,
             reset_timeout=config.circuit_reset_timeout,
@@ -34,7 +36,7 @@ class OmdbClient:
         Returns:
             Datos de la pelicula o None si OMDB responde ``Response=False``.
         """
-        data = self._get({"t": titulo, "apikey": OMDB_API_KEY})
+        data = self._get({"t": titulo, "apikey": self._api_key})
         if data.get("Response") == "True":
             return data
         return None
@@ -45,7 +47,7 @@ class OmdbClient:
         Returns:
             Lista de resultados de la busqueda.
         """
-        data = self._get({"s": actor, "type": "movie", "apikey": OMDB_API_KEY})
+        data = self._get({"s": actor, "type": "movie", "apikey": self._api_key})
         if data.get("Response") == "True":
             return cast(list[dict[str, Any]], data.get("Search", []))
         return []

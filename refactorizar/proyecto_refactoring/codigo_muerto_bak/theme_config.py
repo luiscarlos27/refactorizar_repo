@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ theme_config = {}
 def load_theme_config():
     """Carga configuración de tema"""
     global theme_config
-    
+
     if os.path.exists(THEME_CONFIG_FILE):
-        with open(THEME_CONFIG_FILE, 'r') as f:
+        with open(THEME_CONFIG_FILE) as f:
             theme_config = json.load(f)
     else:
         theme_config = {
@@ -106,9 +105,9 @@ def export_theme_config(filename):
 def import_theme_config(filename):
     """Importa configuración de tema"""
     global theme_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             theme_config = json.load(f)
         save_theme_config()
         return True
@@ -117,12 +116,12 @@ def import_theme_config(filename):
 def validate_theme_config():
     """Valida configuración de tema"""
     errors = []
-    
+
     for key in ["primary_color", "secondary_color", "background_color", "text_color"]:
         if key in theme_config:
             if not theme_config[key].startswith("#"):
                 errors.append(key + " must be a valid hex color")
-    
+
     return errors
 
 def backup_theme_config():

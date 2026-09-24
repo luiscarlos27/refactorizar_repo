@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_security_config = {}
 def load_api_security_config():
     """Carga configuración de seguridad de API"""
     global api_security_config
-    
+
     if os.path.exists(API_SECURITY_CONFIG_FILE):
-        with open(API_SECURITY_CONFIG_FILE, 'r') as f:
+        with open(API_SECURITY_CONFIG_FILE) as f:
             api_security_config = json.load(f)
     else:
         api_security_config = {
@@ -105,9 +104,9 @@ def export_api_security_config(filename):
 def import_api_security_config(filename):
     """Importa configuración de seguridad de API"""
     global api_security_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_security_config = json.load(f)
         save_api_security_config()
         return True
@@ -116,16 +115,16 @@ def import_api_security_config(filename):
 def validate_api_security_config():
     """Valida configuración de seguridad de API"""
     errors = []
-    
+
     for key in ["verify_ssl", "allow_redirects"]:
         if key in api_security_config:
             if not isinstance(api_security_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     if "max_redirects" in api_security_config:
         if not isinstance(api_security_config["max_redirects"], int):
             errors.append("max_redirects must be integer")
-    
+
     return errors
 
 def backup_api_security_config():

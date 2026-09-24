@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ cache_expiry_config = {}
 def load_cache_expiry_config():
     """Carga configuración de expiración de caché"""
     global cache_expiry_config
-    
+
     if os.path.exists(CACHE_EXPIRY_CONFIG_FILE):
-        with open(CACHE_EXPIRY_CONFIG_FILE, 'r') as f:
+        with open(CACHE_EXPIRY_CONFIG_FILE) as f:
             cache_expiry_config = json.load(f)
     else:
         cache_expiry_config = {
@@ -95,9 +94,9 @@ def export_cache_expiry_config(filename):
 def import_cache_expiry_config(filename):
     """Importa configuración de expiración de caché"""
     global cache_expiry_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             cache_expiry_config = json.load(f)
         save_cache_expiry_config()
         return True
@@ -106,12 +105,12 @@ def import_cache_expiry_config(filename):
 def validate_cache_expiry_config():
     """Valida configuración de expiración de caché"""
     errors = []
-    
+
     for key in ["movie_expiry_hours", "series_expiry_hours", "search_expiry_hours", "default_expiry_hours"]:
         if key in cache_expiry_config:
             if not isinstance(cache_expiry_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_cache_expiry_config():

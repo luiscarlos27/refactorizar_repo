@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ metadata = {}
 def load_metadata():
     """Carga metadatos"""
     global metadata
-    
+
     if os.path.exists(METADATA_FILE):
-        with open(METADATA_FILE, 'r') as f:
+        with open(METADATA_FILE) as f:
             metadata = json.load(f)
     else:
         metadata = {}
@@ -70,11 +69,11 @@ def search_metadata(query):
     """Busca metadatos"""
     results = {}
     query_lower = query.lower()
-    
+
     for key, value in metadata.items():
         if query_lower in key.lower():
             results[key] = value
-    
+
     return results
 
 def clear_metadata():
@@ -89,11 +88,11 @@ def get_metadata_stats():
         "total": len(metadata),
         "by_type": {}
     }
-    
+
     for key, value in metadata.items():
         value_type = type(value.get("value")).__name__
         stats["by_type"][value_type] = stats["by_type"].get(value_type, 0) + 1
-    
+
     return stats
 
 def export_metadata(filename):
@@ -104,9 +103,9 @@ def export_metadata(filename):
 def import_metadata(filename):
     """Importa metadatos"""
     global metadata
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             metadata = json.load(f)
         save_metadata()
         return True
@@ -115,13 +114,13 @@ def import_metadata(filename):
 def validate_metadata():
     """Valida integridad de metadatos"""
     errors = []
-    
+
     for key, value in metadata.items():
         if "value" not in value:
             errors.append("Metadata " + key + " missing value")
         if "created" not in value:
             errors.append("Metadata " + key + " missing created")
-    
+
     return errors
 
 def backup_metadata():
@@ -153,11 +152,11 @@ def update_metadata(key, updates):
 def get_metadata_by_pattern(pattern):
     """Obtiene metadatos por patrón"""
     results = {}
-    
+
     for key, value in metadata.items():
         if pattern in key:
             results[key] = value
-    
+
     return results
 
 # Cargar metadatos al importar

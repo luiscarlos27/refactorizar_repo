@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_serialization_config = {}
 def load_api_cache_serialization_config():
     """Carga configuración de serialización de caché de API"""
     global api_cache_serialization_config
-    
+
     if os.path.exists(API_CACHE_SERIALIZATION_CONFIG_FILE):
-        with open(API_CACHE_SERIALIZATION_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_SERIALIZATION_CONFIG_FILE) as f:
             api_cache_serialization_config = json.load(f)
     else:
         api_cache_serialization_config = {
@@ -105,9 +104,9 @@ def export_api_cache_serialization_config(filename):
 def import_api_cache_serialization_config(filename):
     """Importa configuración de serialización de caché de API"""
     global api_cache_serialization_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_serialization_config = json.load(f)
         save_api_cache_serialization_config()
         return True
@@ -116,12 +115,12 @@ def import_api_cache_serialization_config(filename):
 def validate_api_cache_serialization_config():
     """Valida configuración de serialización de caché de API"""
     errors = []
-    
+
     for key in ["pretty_print", "include_metadata"]:
         if key in api_cache_serialization_config:
             if not isinstance(api_cache_serialization_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_api_cache_serialization_config():

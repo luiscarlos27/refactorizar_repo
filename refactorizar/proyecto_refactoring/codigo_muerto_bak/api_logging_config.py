@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_logging_config = {}
 def load_api_logging_config():
     """Carga configuración de logging de API"""
     global api_logging_config
-    
+
     if os.path.exists(API_LOGGING_CONFIG_FILE):
-        with open(API_LOGGING_CONFIG_FILE, 'r') as f:
+        with open(API_LOGGING_CONFIG_FILE) as f:
             api_logging_config = json.load(f)
     else:
         api_logging_config = {
@@ -100,9 +99,9 @@ def export_api_logging_config(filename):
 def import_api_logging_config(filename):
     """Importa configuración de logging de API"""
     global api_logging_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_logging_config = json.load(f)
         save_api_logging_config()
         return True
@@ -111,15 +110,15 @@ def import_api_logging_config(filename):
 def validate_api_logging_config():
     """Valida configuración de logging de API"""
     errors = []
-    
+
     if "log_level" in api_logging_config:
         if api_logging_config["log_level"] not in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
             errors.append("Invalid log level")
-    
+
     if "max_size_mb" in api_logging_config:
         if not isinstance(api_logging_config["max_size_mb"], int):
             errors.append("max_size_mb must be integer")
-    
+
     return errors
 
 def backup_api_logging_config():

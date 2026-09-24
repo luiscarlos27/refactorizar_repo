@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ tags = {}
 def load_tags():
     """Carga etiquetas"""
     global tags
-    
+
     if os.path.exists(TAG_FILE):
-        with open(TAG_FILE, 'r') as f:
+        with open(TAG_FILE) as f:
             tags = json.load(f)
     else:
         tags = {}
@@ -26,7 +25,7 @@ def add_tag(name, tag_info=None):
     """Agrega etiqueta"""
     if tag_info is None:
         tag_info = {}
-    
+
     tags[name] = {
         "name": name,
         "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -72,11 +71,11 @@ def search_tags(query):
     """Busca etiquetas"""
     results = {}
     query_lower = query.lower()
-    
+
     for name, tag in tags.items():
         if query_lower in name.lower():
             results[name] = tag
-    
+
     return results
 
 def get_popular_tags(count=10):
@@ -103,9 +102,9 @@ def export_tags(filename):
 def import_tags(filename):
     """Importa etiquetas"""
     global tags
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             tags = json.load(f)
         save_tags()
         return True
@@ -118,23 +117,23 @@ def get_tag_stats():
         "total_usage": 0,
         "avg_usage": 0
     }
-    
+
     for tag in tags.values():
         stats["total_usage"] += tag.get("usage_count", 0)
-    
+
     if len(tags) > 0:
         stats["avg_usage"] = stats["total_usage"] / len(tags)
-    
+
     return stats
 
 def validate_tags():
     """Valida integridad de etiquetas"""
     errors = []
-    
+
     for name, tag in tags.items():
         if "name" not in tag:
             errors.append("Tag " + name + " missing name")
-    
+
     return errors
 
 def backup_tags():

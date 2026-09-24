@@ -1,6 +1,4 @@
-import json
 import os
-import time
 from datetime import datetime
 
 # Variables globales
@@ -12,11 +10,11 @@ def log_message(message, level="INFO"):
     """Escribe mensaje a archivo y consola"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     formatted_message = timestamp + " [" + level + "] " + message
-    
+
     # Escribir a archivo
     with open(LOG_FILE, 'a') as f:
         f.write(formatted_message + "\n")
-    
+
     # Imprimir a consola si debug
     if LOG_LEVEL == "DEBUG":
         print(formatted_message)
@@ -49,7 +47,7 @@ def clear_log():
 def get_log_lines():
     """Obtiene líneas del log"""
     if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, 'r') as f:
+        with open(LOG_FILE) as f:
             return f.readlines()
     return []
 
@@ -80,7 +78,7 @@ def get_log_stats():
         "error": 0,
         "critical": 0
     }
-    
+
     for line in lines:
         if "[DEBUG]" in line:
             stats["debug"] += 1
@@ -92,7 +90,7 @@ def get_log_stats():
             stats["error"] += 1
         elif "[CRITICAL]" in line:
             stats["critical"] += 1
-    
+
     return stats
 
 def format_log_entry(timestamp, level, message):

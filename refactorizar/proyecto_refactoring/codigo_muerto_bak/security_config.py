@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ security_config = {}
 def load_security_config():
     """Carga configuración de seguridad"""
     global security_config
-    
+
     if os.path.exists(SECURITY_CONFIG_FILE):
-        with open(SECURITY_CONFIG_FILE, 'r') as f:
+        with open(SECURITY_CONFIG_FILE) as f:
             security_config = json.load(f)
     else:
         security_config = {
@@ -111,9 +110,9 @@ def export_security_config(filename):
 def import_security_config(filename):
     """Importa configuración de seguridad"""
     global security_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             security_config = json.load(f)
         save_security_config()
         return True
@@ -122,15 +121,15 @@ def import_security_config(filename):
 def validate_security_config():
     """Valida configuración de seguridad"""
     errors = []
-    
+
     if "max_login_attempts" in security_config:
         if not isinstance(security_config["max_login_attempts"], int):
             errors.append("max_login_attempts must be integer")
-    
+
     if "password_min_length" in security_config:
         if not isinstance(security_config["password_min_length"], int):
             errors.append("password_min_length must be integer")
-    
+
     return errors
 
 def backup_security_config():

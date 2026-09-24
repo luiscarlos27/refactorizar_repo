@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_rate_limiter_config = {}
 def load_api_rate_limiter_config():
     """Carga configuración de limitador de tasa de API"""
     global api_rate_limiter_config
-    
+
     if os.path.exists(API_RATE_LIMITER_CONFIG_FILE):
-        with open(API_RATE_LIMITER_CONFIG_FILE, 'r') as f:
+        with open(API_RATE_LIMITER_CONFIG_FILE) as f:
             api_rate_limiter_config = json.load(f)
     else:
         api_rate_limiter_config = {
@@ -100,9 +99,9 @@ def export_api_rate_limiter_config(filename):
 def import_api_rate_limiter_config(filename):
     """Importa configuración de limitador de tasa de API"""
     global api_rate_limiter_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_rate_limiter_config = json.load(f)
         save_api_rate_limiter_config()
         return True
@@ -111,16 +110,16 @@ def import_api_rate_limiter_config(filename):
 def validate_api_rate_limiter_config():
     """Valida configuración de limitador de tasa de API"""
     errors = []
-    
+
     if "enabled" in api_rate_limiter_config:
         if not isinstance(api_rate_limiter_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     for key in ["bucket_size", "refill_rate"]:
         if key in api_rate_limiter_config:
             if not isinstance(api_rate_limiter_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_rate_limiter_config():

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -48,9 +47,9 @@ app_config = {}
 def load_config():
     """Carga configuración"""
     global app_config
-    
+
     if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r') as f:
+        with open(CONFIG_FILE) as f:
             app_config = json.load(f)
     else:
         app_config = DEFAULT_CONFIG.copy()
@@ -114,9 +113,9 @@ def export_config(filename):
 def import_config(filename):
     """Importa configuración"""
     global app_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             app_config = json.load(f)
         save_config()
         return True
@@ -125,17 +124,17 @@ def import_config(filename):
 def validate_config():
     """Valida configuración"""
     errors = []
-    
+
     required_sections = ["app", "api", "ui", "cache", "data", "logging"]
     for section in required_sections:
         if section not in app_config:
             errors.append("Missing section: " + section)
-    
+
     if "api" in app_config:
         if "timeout" in app_config["api"]:
             if not isinstance(app_config["api"]["timeout"], int):
                 errors.append("api.timeout must be integer")
-    
+
     return errors
 
 def print_config():
@@ -143,7 +142,7 @@ def print_config():
     print("=" * 60)
     print("CONFIGURACIÓN DE LA APLICACIÓN")
     print("=" * 60)
-    
+
     for section, values in app_config.items():
         print("\n" + section.upper() + ":")
         print("-" * 40)
@@ -152,19 +151,19 @@ def print_config():
                 print("  " + key + ": " + str(value))
         else:
             print("  " + str(values))
-    
+
     print("\n" + "=" * 60)
 
 def get_config_summary():
     """Obtiene resumen de configuración"""
     summary = {}
-    
+
     for section, values in app_config.items():
         if isinstance(values, dict):
             summary[section] = len(values)
         else:
             summary[section] = 1
-    
+
     return summary
 
 def backup_config():
@@ -192,25 +191,25 @@ def get_config_value(path):
     """Obtiene valor por ruta (ej: 'api.timeout')"""
     keys = path.split(".")
     value = app_config
-    
+
     for key in keys:
         if isinstance(value, dict) and key in value:
             value = value[key]
         else:
             return None
-    
+
     return value
 
 def set_config_value(path, value):
     """Establece valor por ruta"""
     keys = path.split(".")
     config = app_config
-    
+
     for key in keys[:-1]:
         if key not in config:
             config[key] = {}
         config = config[key]
-    
+
     config[keys[-1]] = value
     save_config()
 

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -30,9 +29,9 @@ current_settings = {}
 def load_settings():
     """Carga configuración"""
     global current_settings
-    
+
     if os.path.exists(SETTINGS_FILE):
-        with open(SETTINGS_FILE, 'r') as f:
+        with open(SETTINGS_FILE) as f:
             current_settings = json.load(f)
     else:
         current_settings = DEFAULT_SETTINGS.copy()
@@ -83,9 +82,9 @@ def export_settings(filename):
 def import_settings(filename):
     """Importa configuración"""
     global current_settings
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             current_settings = json.load(f)
         save_settings()
         return True
@@ -94,24 +93,24 @@ def import_settings(filename):
 def validate_settings():
     """Valida configuración"""
     errors = []
-    
+
     required_keys = ["app_name", "version", "api_timeout", "max_results"]
     for key in required_keys:
         if key not in current_settings:
             errors.append("Missing setting: " + key)
-    
+
     if "api_timeout" in current_settings:
         if not isinstance(current_settings["api_timeout"], int):
             errors.append("api_timeout must be integer")
         elif current_settings["api_timeout"] <= 0:
             errors.append("api_timeout must be positive")
-    
+
     if "max_results" in current_settings:
         if not isinstance(current_settings["max_results"], int):
             errors.append("max_results must be integer")
         elif current_settings["max_results"] <= 0:
             errors.append("max_results must be positive")
-    
+
     return errors
 
 def print_settings():
@@ -119,10 +118,10 @@ def print_settings():
     print("=" * 50)
     print("CONFIGURACIÓN ACTUAL")
     print("=" * 50)
-    
+
     for key, value in current_settings.items():
         print(key + ": " + str(value))
-    
+
     print("=" * 50)
 
 def get_setting_type(key):

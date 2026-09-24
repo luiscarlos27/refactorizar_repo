@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ storage_config = {}
 def load_storage_config():
     """Carga configuración de almacenamiento"""
     global storage_config
-    
+
     if os.path.exists(STORAGE_CONFIG_FILE):
-        with open(STORAGE_CONFIG_FILE, 'r') as f:
+        with open(STORAGE_CONFIG_FILE) as f:
             storage_config = json.load(f)
     else:
         storage_config = {
@@ -95,9 +94,9 @@ def export_storage_config(filename):
 def import_storage_config(filename):
     """Importa configuración de almacenamiento"""
     global storage_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             storage_config = json.load(f)
         save_storage_config()
         return True
@@ -106,12 +105,12 @@ def import_storage_config(filename):
 def validate_storage_config():
     """Valida configuración de almacenamiento"""
     errors = []
-    
+
     for key in ["data_dir", "cache_dir", "backup_dir"]:
         if key in storage_config:
             if not storage_config[key]:
                 errors.append(key + " cannot be empty")
-    
+
     return errors
 
 def backup_storage_config():

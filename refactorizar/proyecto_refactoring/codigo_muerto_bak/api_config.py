@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_config = {}
 def load_api_config():
     """Carga configuración de API"""
     global api_config
-    
+
     if os.path.exists(API_CONFIG_FILE):
-        with open(API_CONFIG_FILE, 'r') as f:
+        with open(API_CONFIG_FILE) as f:
             api_config = json.load(f)
     else:
         api_config = {
@@ -95,11 +94,11 @@ def search_apis(query):
     """Busca APIs"""
     results = {}
     query_lower = query.lower()
-    
+
     for api_name, config in api_config.items():
         if query_lower in api_name.lower():
             results[api_name] = config
-    
+
     return results
 
 def clear_api_configs():
@@ -115,13 +114,13 @@ def get_api_stats():
         "with_key": 0,
         "without_key": 0
     }
-    
+
     for config in api_config.values():
         if config.get("key"):
             stats["with_key"] += 1
         else:
             stats["without_key"] += 1
-    
+
     return stats
 
 def export_api_config(filename):
@@ -132,9 +131,9 @@ def export_api_config(filename):
 def import_api_config(filename):
     """Importa configuración de API"""
     global api_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_config = json.load(f)
         save_api_config()
         return True
@@ -143,11 +142,11 @@ def import_api_config(filename):
 def validate_api_config():
     """Valida configuración de API"""
     errors = []
-    
+
     for api_name, config in api_config.items():
         if "url" not in config:
             errors.append("API " + api_name + " missing url")
-    
+
     return errors
 
 def backup_api_config():

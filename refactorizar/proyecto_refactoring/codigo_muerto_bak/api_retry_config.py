@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_retry_config = {}
 def load_api_retry_config():
     """Carga configuración de reintentos de API"""
     global api_retry_config
-    
+
     if os.path.exists(API_RETRY_CONFIG_FILE):
-        with open(API_RETRY_CONFIG_FILE, 'r') as f:
+        with open(API_RETRY_CONFIG_FILE) as f:
             api_retry_config = json.load(f)
     else:
         api_retry_config = {
@@ -100,9 +99,9 @@ def export_api_retry_config(filename):
 def import_api_retry_config(filename):
     """Importa configuración de reintentos de API"""
     global api_retry_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_retry_config = json.load(f)
         save_api_retry_config()
         return True
@@ -111,12 +110,12 @@ def import_api_retry_config(filename):
 def validate_api_retry_config():
     """Valida configuración de reintentos de API"""
     errors = []
-    
+
     for key in ["max_retries", "retry_delay", "max_retry_delay"]:
         if key in api_retry_config:
             if not isinstance(api_retry_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_retry_config():

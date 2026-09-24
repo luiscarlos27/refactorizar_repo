@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ privacy_config = {}
 def load_privacy_config():
     """Carga configuración de privacidad"""
     global privacy_config
-    
+
     if os.path.exists(PRIVACY_CONFIG_FILE):
-        with open(PRIVACY_CONFIG_FILE, 'r') as f:
+        with open(PRIVACY_CONFIG_FILE) as f:
             privacy_config = json.load(f)
     else:
         privacy_config = {
@@ -110,9 +109,9 @@ def export_privacy_config(filename):
 def import_privacy_config(filename):
     """Importa configuración de privacidad"""
     global privacy_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             privacy_config = json.load(f)
         save_privacy_config()
         return True
@@ -121,12 +120,12 @@ def import_privacy_config(filename):
 def validate_privacy_config():
     """Valida configuración de privacidad"""
     errors = []
-    
+
     for key in ["analytics_enabled", "crash_reporting", "personalization"]:
         if key in privacy_config:
             if not isinstance(privacy_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_privacy_config():

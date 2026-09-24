@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_debug_config = {}
 def load_api_debug_config():
     """Carga configuración de debug de API"""
     global api_debug_config
-    
+
     if os.path.exists(API_DEBUG_CONFIG_FILE):
-        with open(API_DEBUG_CONFIG_FILE, 'r') as f:
+        with open(API_DEBUG_CONFIG_FILE) as f:
             api_debug_config = json.load(f)
     else:
         api_debug_config = {
@@ -115,9 +114,9 @@ def export_api_debug_config(filename):
 def import_api_debug_config(filename):
     """Importa configuración de debug de API"""
     global api_debug_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_debug_config = json.load(f)
         save_api_debug_config()
         return True
@@ -126,12 +125,12 @@ def import_api_debug_config(filename):
 def validate_api_debug_config():
     """Valida configuración de debug de API"""
     errors = []
-    
+
     for key in ["log_api_requests", "log_api_responses", "log_api_errors", "show_api_timing"]:
         if key in api_debug_config:
             if not isinstance(api_debug_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_api_debug_config():

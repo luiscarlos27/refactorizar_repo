@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_degradation_config = {}
 def load_api_degradation_config():
     """Carga configuración de degradación de API"""
     global api_degradation_config
-    
+
     if os.path.exists(API_DEGRADATION_CONFIG_FILE):
-        with open(API_DEGRADATION_CONFIG_FILE, 'r') as f:
+        with open(API_DEGRADATION_CONFIG_FILE) as f:
             api_degradation_config = json.load(f)
     else:
         api_degradation_config = {
@@ -100,9 +99,9 @@ def export_api_degradation_config(filename):
 def import_api_degradation_config(filename):
     """Importa configuración de degradación de API"""
     global api_degradation_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_degradation_config = json.load(f)
         save_api_degradation_config()
         return True
@@ -111,16 +110,16 @@ def import_api_degradation_config(filename):
 def validate_api_degradation_config():
     """Valida configuración de degradación de API"""
     errors = []
-    
+
     if "enabled" in api_degradation_config:
         if not isinstance(api_degradation_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     for key in ["degrade_after_failures", "degraded_response_time_ms"]:
         if key in api_degradation_config:
             if not isinstance(api_degradation_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_degradation_config():

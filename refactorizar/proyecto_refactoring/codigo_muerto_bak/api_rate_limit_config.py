@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_rate_limit_config = {}
 def load_api_rate_limit_config():
     """Carga configuración de límite de tasa de API"""
     global api_rate_limit_config
-    
+
     if os.path.exists(API_RATE_LIMIT_CONFIG_FILE):
-        with open(API_RATE_LIMIT_CONFIG_FILE, 'r') as f:
+        with open(API_RATE_LIMIT_CONFIG_FILE) as f:
             api_rate_limit_config = json.load(f)
     else:
         api_rate_limit_config = {
@@ -100,9 +99,9 @@ def export_api_rate_limit_config(filename):
 def import_api_rate_limit_config(filename):
     """Importa configuración de límite de tasa de API"""
     global api_rate_limit_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_rate_limit_config = json.load(f)
         save_api_rate_limit_config()
         return True
@@ -111,12 +110,12 @@ def import_api_rate_limit_config(filename):
 def validate_api_rate_limit_config():
     """Valida configuración de límite de tasa de API"""
     errors = []
-    
+
     for key in ["omdb_requests_per_minute", "tvmaze_requests_per_minute", "rate_limit_window"]:
         if key in api_rate_limit_config:
             if not isinstance(api_rate_limit_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_rate_limit_config():

@@ -5,7 +5,7 @@ El sistema SHALL leer las claves de API y valores sensibles desde variables de e
 
 #### Scenario: Clave desde entorno
 - **WHEN** la aplicación necesita la clave de OMDB
-- **THEN** la obtiene de una variable de entorno (con fallback a un valor de desarrollo solo si la variable no existe y está documentado)
+- **THEN** la obtiene de una variable de entorno; si no está definida, falla al arrancar con un mensaje claro (sin valores por defecto en el código)
 
 #### Scenario: Sin claves en el código
 - **WHEN** se busca en el código fuente por valores de API key

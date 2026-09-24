@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ language_config = {}
 def load_language_config():
     """Carga configuración de idioma"""
     global language_config
-    
+
     if os.path.exists(LANGUAGE_CONFIG_FILE):
-        with open(LANGUAGE_CONFIG_FILE, 'r') as f:
+        with open(LANGUAGE_CONFIG_FILE) as f:
             language_config = json.load(f)
     else:
         language_config = {
@@ -66,7 +65,7 @@ def add_language(language):
     """Agrega idioma disponible"""
     if "available" not in language_config:
         language_config["available"] = []
-    
+
     if language not in language_config["available"]:
         language_config["available"].append(language)
         save_language_config()
@@ -103,9 +102,9 @@ def export_language_config(filename):
 def import_language_config(filename):
     """Importa configuración de idioma"""
     global language_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             language_config = json.load(f)
         save_language_config()
         return True
@@ -114,11 +113,11 @@ def import_language_config(filename):
 def validate_language_config():
     """Valida configuración de idioma"""
     errors = []
-    
+
     if "current" in language_config:
         if not is_language_available(language_config["current"]):
             errors.append("Current language not in available languages")
-    
+
     return errors
 
 def backup_language_config():

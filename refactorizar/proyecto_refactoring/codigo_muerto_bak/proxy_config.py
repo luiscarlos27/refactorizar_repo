@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ proxy_config = {}
 def load_proxy_config():
     """Carga configuración de proxy"""
     global proxy_config
-    
+
     if os.path.exists(PROXY_CONFIG_FILE):
-        with open(PROXY_CONFIG_FILE, 'r') as f:
+        with open(PROXY_CONFIG_FILE) as f:
             proxy_config = json.load(f)
     else:
         proxy_config = {
@@ -111,9 +110,9 @@ def export_proxy_config(filename):
 def import_proxy_config(filename):
     """Importa configuración de proxy"""
     global proxy_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             proxy_config = json.load(f)
         save_proxy_config()
         return True
@@ -122,11 +121,11 @@ def import_proxy_config(filename):
 def validate_proxy_config():
     """Valida configuración de proxy"""
     errors = []
-    
+
     if "port" in proxy_config:
         if not isinstance(proxy_config["port"], int):
             errors.append("port must be integer")
-    
+
     return errors
 
 def backup_proxy_config():

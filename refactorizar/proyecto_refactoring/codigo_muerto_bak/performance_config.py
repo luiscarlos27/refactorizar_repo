@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ performance_config = {}
 def load_performance_config():
     """Carga configuración de rendimiento"""
     global performance_config
-    
+
     if os.path.exists(PERFORMANCE_CONFIG_FILE):
-        with open(PERFORMANCE_CONFIG_FILE, 'r') as f:
+        with open(PERFORMANCE_CONFIG_FILE) as f:
             performance_config = json.load(f)
     else:
         performance_config = {
@@ -100,9 +99,9 @@ def export_performance_config(filename):
 def import_performance_config(filename):
     """Importa configuración de rendimiento"""
     global performance_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             performance_config = json.load(f)
         save_performance_config()
         return True
@@ -111,12 +110,12 @@ def import_performance_config(filename):
 def validate_performance_config():
     """Valida configuración de rendimiento"""
     errors = []
-    
+
     for key in ["cache_size_mb", "max_concurrent_requests", "connection_pool_size"]:
         if key in performance_config:
             if not isinstance(performance_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_performance_config():

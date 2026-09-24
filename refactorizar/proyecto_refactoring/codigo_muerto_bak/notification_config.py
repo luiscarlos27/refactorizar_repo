@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ notification_config = {}
 def load_notification_config():
     """Carga configuración de notificaciones"""
     global notification_config
-    
+
     if os.path.exists(NOTIFICATION_CONFIG_FILE):
-        with open(NOTIFICATION_CONFIG_FILE, 'r') as f:
+        with open(NOTIFICATION_CONFIG_FILE) as f:
             notification_config = json.load(f)
     else:
         notification_config = {
@@ -126,9 +125,9 @@ def export_notification_config(filename):
 def import_notification_config(filename):
     """Importa configuración de notificaciones"""
     global notification_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             notification_config = json.load(f)
         save_notification_config()
         return True
@@ -137,12 +136,12 @@ def import_notification_config(filename):
 def validate_notification_config():
     """Valida configuración de notificaciones"""
     errors = []
-    
+
     for key in ["enabled", "sound", "desktop", "email"]:
         if key in notification_config:
             if not isinstance(notification_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_notification_config():

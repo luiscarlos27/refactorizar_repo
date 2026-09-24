@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_config = {}
 def load_api_cache_config():
     """Carga configuración de caché de API"""
     global api_cache_config
-    
+
     if os.path.exists(API_CACHE_CONFIG_FILE):
-        with open(API_CACHE_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_CONFIG_FILE) as f:
             api_cache_config = json.load(f)
     else:
         api_cache_config = {
@@ -105,9 +104,9 @@ def export_api_cache_config(filename):
 def import_api_cache_config(filename):
     """Importa configuración de caché de API"""
     global api_cache_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_config = json.load(f)
         save_api_cache_config()
         return True
@@ -116,12 +115,12 @@ def import_api_cache_config(filename):
 def validate_api_cache_config():
     """Valida configuración de caché de API"""
     errors = []
-    
+
     for key in ["api_cache_size_mb", "api_cache_expiry_hours"]:
         if key in api_cache_config:
             if not isinstance(api_cache_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_cache_config():

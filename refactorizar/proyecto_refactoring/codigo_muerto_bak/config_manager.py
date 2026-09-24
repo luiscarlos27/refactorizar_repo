@@ -22,9 +22,9 @@ current_config = {}
 def load_config():
     """Carga configuración sin manejo de errores"""
     global current_config
-    
+
     if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r') as f:
+        with open(CONFIG_FILE) as f:
             current_config = json.load(f)
     else:
         current_config = DEFAULT_CONFIG.copy()
@@ -58,7 +58,7 @@ def export_config(filename):
 def import_config(filename):
     """Importa configuración sin validación"""
     global current_config
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         current_config = json.load(f)
 
 def print_config():
@@ -69,18 +69,18 @@ def print_config():
 def validate_config():
     """Valida configuración (pero no hace nada con los errores)"""
     errors = []
-    
+
     if "api_timeout" not in current_config:
         errors.append("Falta api_timeout")
-    
+
     if "max_results" not in current_config:
         errors.append("Falta max_results")
-    
+
     if len(errors) > 0:
         print("Hay errores en la configuración:")
         for error in errors:
             print("- " + error)
-    
+
     return len(errors) == 0
 
 # Inicializar configuración

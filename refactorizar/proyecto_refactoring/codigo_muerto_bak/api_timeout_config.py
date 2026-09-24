@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_timeout_config = {}
 def load_api_timeout_config():
     """Carga configuración de timeout de API"""
     global api_timeout_config
-    
+
     if os.path.exists(API_TIMEOUT_CONFIG_FILE):
-        with open(API_TIMEOUT_CONFIG_FILE, 'r') as f:
+        with open(API_TIMEOUT_CONFIG_FILE) as f:
             api_timeout_config = json.load(f)
     else:
         api_timeout_config = {
@@ -95,9 +94,9 @@ def export_api_timeout_config(filename):
 def import_api_timeout_config(filename):
     """Importa configuración de timeout de API"""
     global api_timeout_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_timeout_config = json.load(f)
         save_api_timeout_config()
         return True
@@ -106,12 +105,12 @@ def import_api_timeout_config(filename):
 def validate_api_timeout_config():
     """Valida configuración de timeout de API"""
     errors = []
-    
+
     for key in ["omdb_timeout", "tvmaze_timeout", "default_timeout", "connect_timeout"]:
         if key in api_timeout_config:
             if not isinstance(api_timeout_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_timeout_config():

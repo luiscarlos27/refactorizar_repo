@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_integration_config = {}
 def load_api_cache_integration_config():
     """Carga configuración de integración de caché de API"""
     global api_cache_integration_config
-    
+
     if os.path.exists(API_CACHE_INTEGRATION_CONFIG_FILE):
-        with open(API_CACHE_INTEGRATION_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_INTEGRATION_CONFIG_FILE) as f:
             api_cache_integration_config = json.load(f)
     else:
         api_cache_integration_config = {
@@ -78,7 +77,7 @@ def add_integration_point(point):
     """Agrega punto de integración"""
     if "integration_points" not in api_cache_integration_config:
         api_cache_integration_config["integration_points"] = []
-    
+
     if point not in api_cache_integration_config["integration_points"]:
         api_cache_integration_config["integration_points"].append(point)
         save_api_cache_integration_config()
@@ -120,9 +119,9 @@ def export_api_cache_integration_config(filename):
 def import_api_cache_integration_config(filename):
     """Importa configuración de integración de caché de API"""
     global api_cache_integration_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_integration_config = json.load(f)
         save_api_cache_integration_config()
         return True
@@ -131,15 +130,15 @@ def import_api_cache_integration_config(filename):
 def validate_api_cache_integration_config():
     """Valida configuración de integración de caché de API"""
     errors = []
-    
+
     if "enabled" in api_cache_integration_config:
         if not isinstance(api_cache_integration_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     if "integration_points" in api_cache_integration_config:
         if not isinstance(api_cache_integration_config["integration_points"], list):
             errors.append("integration_points must be list")
-    
+
     return errors
 
 def backup_api_cache_integration_config():

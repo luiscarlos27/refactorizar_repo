@@ -39,7 +39,7 @@ Conectar a APIs públicas de películas (OMDB y TVMaze) sin requerir API keys. E
 
 ## APIs Utilizadas
 
-- **OMDB API**: demo key "trilogy" (no requiere registro)
+- **OMDB API**: clave definida en variable de entorno `OMDB_API_KEY` (archivo `.env`, ver `.env.example`)
 - **TVMaze API**: pública, sin key
 
 ## Cómo Ejecutar

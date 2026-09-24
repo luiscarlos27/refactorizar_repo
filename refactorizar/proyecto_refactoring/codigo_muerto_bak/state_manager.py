@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -30,9 +29,9 @@ app_state = {}
 def load_state():
     """Carga estado de la aplicación"""
     global app_state
-    
+
     if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, 'r') as f:
+        with open(STATE_FILE) as f:
             app_state = json.load(f)
     else:
         app_state = DEFAULT_STATE.copy()
@@ -76,14 +75,14 @@ def add_to_favorites(movie):
     """Agrega película a favoritas"""
     if "favorites" not in app_state:
         app_state["favorites"] = []
-    
+
     # Verificar duplicados
     exists = False
     for fav in app_state["favorites"]:
         if fav.get("Title") == movie.get("Title"):
             exists = True
             break
-    
+
     if not exists:
         app_state["favorites"].append(movie)
         save_state()
@@ -94,7 +93,7 @@ def remove_from_favorites(title):
     """Elimina película de favoritas"""
     if "favorites" not in app_state:
         return False
-    
+
     for i in range(len(app_state["favorites"])):
         if app_state["favorites"][i].get("Title") == title:
             app_state["favorites"].pop(i)
@@ -110,7 +109,7 @@ def add_to_history(item):
     """Agrega al historial"""
     if "history" not in app_state:
         app_state["history"] = []
-    
+
     item["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     app_state["history"].append(item)
     save_state()
@@ -142,13 +141,13 @@ def update_session_stats(searches=None, views=None):
     """Actualiza estadísticas de sesión"""
     if "session" not in app_state:
         app_state["session"] = {}
-    
+
     if searches is not None:
         app_state["session"]["total_searches"] = app_state["session"].get("total_searches", 0) + searches
-    
+
     if views is not None:
         app_state["session"]["total_views"] = app_state["session"].get("total_views", 0) + views
-    
+
     app_state["session"]["last_activity"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     save_state()
 
@@ -160,7 +159,7 @@ def set_ui_state(key, value):
     """Establece estado de UI"""
     if "ui_state" not in app_state:
         app_state["ui_state"] = {}
-    
+
     app_state["ui_state"][key] = value
     save_state()
 
@@ -176,9 +175,9 @@ def export_state(filename):
 def import_state(filename):
     """Importa estado"""
     global app_state
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             app_state = json.load(f)
         save_state()
         return True
@@ -187,17 +186,17 @@ def import_state(filename):
 def validate_state():
     """Valida estado de la aplicación"""
     errors = []
-    
+
     required_keys = ["favorites", "history", "session"]
     for key in required_keys:
         if key not in app_state:
             errors.append("Missing state key: " + key)
-    
+
     if "session" in app_state:
         session = app_state["session"]
         if "start_time" not in session:
             errors.append("Missing session start_time")
-    
+
     return errors
 
 def get_state_summary():

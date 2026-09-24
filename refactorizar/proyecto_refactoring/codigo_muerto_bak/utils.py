@@ -1,7 +1,6 @@
 import os
-import sys
-import time
 import random
+import time
 from datetime import datetime
 
 # Variables globales
@@ -57,78 +56,78 @@ def format_movie_display(movie):
     """Formatea película para mostrar"""
     lines = []
     lines.append("=" * 50)
-    
+
     if movie is None:
         lines.append("No se encontró la película")
         lines.append("=" * 50)
         return "\n".join(lines)
-    
+
     try:
         lines.append("Título: " + movie["Title"])
     except:
         lines.append("Título: N/A")
-    
+
     try:
         lines.append("Año: " + movie["Year"])
     except:
         lines.append("Año: N/A")
-    
+
     try:
         lines.append("Rating IMDB: " + movie["imdbRating"])
     except:
         lines.append("Rating: N/A")
-    
+
     try:
         lines.append("Género: " + movie["Genre"])
     except:
         lines.append("Género: N/A")
-    
+
     try:
         lines.append("Director: " + movie["Director"])
     except:
         lines.append("Director: N/A")
-    
+
     try:
         lines.append("Actores: " + movie["Actors"])
     except:
         lines.append("Actores: N/A")
-    
+
     try:
         lines.append("Trama: " + movie["Plot"])
     except:
         lines.append("Trama: N/A")
-    
+
     try:
         lines.append("Idioma: " + movie["Language"])
     except:
         lines.append("Idioma: N/A")
-    
+
     try:
         lines.append("País: " + movie["Country"])
     except:
         lines.append("País: N/A")
-    
+
     try:
         lines.append("Premios: " + movie["Awards"])
     except:
         lines.append("Premios: N/A")
-    
+
     try:
         lines.append("Poster: " + movie["Poster"])
     except:
         lines.append("Poster: N/A")
-    
+
     lines.append("=" * 50)
-    
+
     return "\n".join(lines)
 
 def format_series_display(series):
     """Formatea serie para mostrar"""
     lines = []
     lines.append("=" * 50)
-    
+
     show = series.get("show", series)
-    
+
     lines.append("Nombre: " + str(show.get("name", "N/A")))
     lines.append("Idioma: " + str(show.get("language", "N/A")))
     lines.append("Géneros: " + str(show.get("genres", [])))
@@ -137,24 +136,24 @@ def format_series_display(series):
     lines.append("Estreno: " + str(show.get("premiered", "N/A")))
     lines.append("Final: " + str(show.get("ended", "N/A")))
     lines.append("Episodios: " + str(show.get("runtime", "N/A")))
-    
+
     summary = str(show.get("summary", "N/A"))
     if len(summary) > 200:
         summary = summary[:200] + "..."
     lines.append("Resumen: " + summary)
-    
+
     lines.append("=" * 50)
-    
+
     return "\n".join(lines)
 
 def format_list_display(items, item_type="pelicula"):
     """Formatea lista para mostrar"""
     lines = []
-    
+
     if len(items) == 0:
         lines.append("No se encontraron " + item_type + "s")
         return "\n".join(lines)
-    
+
     i = 0
     while i < len(items):
         if "titulo" in items[i]:
@@ -166,7 +165,7 @@ def format_list_display(items, item_type="pelicula"):
         else:
             lines.append(str(i + 1) + ". Elemento desconocido")
         i += 1
-    
+
     return "\n".join(lines)
 
 def save_results(results, filename):
@@ -183,7 +182,7 @@ def save_results(results, filename):
 def export_to_json(data, filename):
     """Exporta datos a JSON"""
     import json
-    
+
     filepath = os.path.join(EXPORT_DIR, filename)
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=4)
@@ -192,7 +191,7 @@ def export_to_json(data, filename):
 def export_to_csv(data, filename):
     """Exporta datos a CSV"""
     import csv
-    
+
     filepath = os.path.join(EXPORT_DIR, filename)
     with open(filepath, 'w', newline='') as f:
         if isinstance(data, list) and len(data) > 0:

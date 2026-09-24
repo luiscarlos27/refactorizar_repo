@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_failover_config = {}
 def load_api_failover_config():
     """Carga configuración de failover de API"""
     global api_failover_config
-    
+
     if os.path.exists(API_FAILOVER_CONFIG_FILE):
-        with open(API_FAILOVER_CONFIG_FILE, 'r') as f:
+        with open(API_FAILOVER_CONFIG_FILE) as f:
             api_failover_config = json.load(f)
     else:
         api_failover_config = {
@@ -105,9 +104,9 @@ def export_api_failover_config(filename):
 def import_api_failover_config(filename):
     """Importa configuración de failover de API"""
     global api_failover_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_failover_config = json.load(f)
         save_api_failover_config()
         return True
@@ -116,16 +115,16 @@ def import_api_failover_config(filename):
 def validate_api_failover_config():
     """Valida configuración de failover de API"""
     errors = []
-    
+
     for key in ["enabled", "auto_switch"]:
         if key in api_failover_config:
             if not isinstance(api_failover_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     if "health_check_interval" in api_failover_config:
         if not isinstance(api_failover_config["health_check_interval"], int):
             errors.append("health_check_interval must be integer")
-    
+
     return errors
 
 def backup_api_failover_config():

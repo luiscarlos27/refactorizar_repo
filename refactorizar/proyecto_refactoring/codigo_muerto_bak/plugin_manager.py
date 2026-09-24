@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -17,9 +16,9 @@ def init_plugins():
 def load_plugin_index():
     """Carga índice de plugins"""
     global plugins
-    
+
     if os.path.exists(PLUGIN_INDEX_FILE):
-        with open(PLUGIN_INDEX_FILE, 'r') as f:
+        with open(PLUGIN_INDEX_FILE) as f:
             plugins = json.load(f)
     else:
         plugins = {}
@@ -86,11 +85,11 @@ def search_plugins(query):
     """Busca plugins"""
     results = {}
     query_lower = query.lower()
-    
+
     for name, plugin in plugins.items():
         if query_lower in name.lower() or query_lower in plugin.get("description", "").lower():
             results[name] = plugin
-    
+
     return results
 
 def update_plugin(name, updates):
@@ -124,11 +123,11 @@ def export_plugins(filename):
 def import_plugins(filename):
     """Importa plugins"""
     global plugins
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             imported = json.load(f)
-        
+
         plugins.update(imported)
         save_plugin_index()
         return True
@@ -141,25 +140,25 @@ def get_plugin_stats():
         "enabled": 0,
         "disabled": 0
     }
-    
+
     for plugin in plugins.values():
         if plugin["enabled"]:
             stats["enabled"] += 1
         else:
             stats["disabled"] += 1
-    
+
     return stats
 
 def validate_plugins():
     """Valida plugins"""
     errors = []
-    
+
     for name, plugin in plugins.items():
         if "name" not in plugin:
             errors.append("Plugin " + name + " missing name")
         if "version" not in plugin:
             errors.append("Plugin " + name + " missing version")
-    
+
     return errors
 
 def backup_plugins():

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_performance_testing_config = {}
 def load_api_cache_performance_testing_config():
     """Carga configuración de testing de rendimiento de caché de API"""
     global api_cache_performance_testing_config
-    
+
     if os.path.exists(API_CACHE_PERFORMANCE_TESTING_CONFIG_FILE):
-        with open(API_CACHE_PERFORMANCE_TESTING_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_PERFORMANCE_TESTING_CONFIG_FILE) as f:
             api_cache_performance_testing_config = json.load(f)
     else:
         api_cache_performance_testing_config = {
@@ -105,9 +104,9 @@ def export_api_cache_performance_testing_config(filename):
 def import_api_cache_performance_testing_config(filename):
     """Importa configuración de testing de rendimiento de caché de API"""
     global api_cache_performance_testing_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_performance_testing_config = json.load(f)
         save_api_cache_performance_testing_config()
         return True
@@ -116,16 +115,16 @@ def import_api_cache_performance_testing_config(filename):
 def validate_api_cache_performance_testing_config():
     """Valida configuración de testing de rendimiento de caché de API"""
     errors = []
-    
+
     if "enabled" in api_cache_performance_testing_config:
         if not isinstance(api_cache_performance_testing_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     for key in ["benchmark_iterations", "concurrent_clients"]:
         if key in api_cache_performance_testing_config:
             if not isinstance(api_cache_performance_testing_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_cache_performance_testing_config():

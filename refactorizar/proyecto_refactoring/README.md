@@ -50,8 +50,8 @@ pytest                # Tests (fase 6)
 | Fase | Change | Estado |
 |---|---|---|
 | 1 | `fase-1-analisis-codigo` | Archivado |
-| 2 | `fase-2-reestructuracion-basica` | En curso |
-| 3 | `fase-3-separacion-responsabilidades` | Pendiente |
-| 4 | `fase-4-manejo-errores` | Pendiente |
-| 5 | `fase-5-seguridad` | Pendiente |
-| 6 | `fase-6-testing` | Pendiente |
+| 2 | `fase-2-reestructuracion-basica` | Archivado |
+| 3 | `fase-3-separacion-responsabilidades` | Archivado |
+| 4 | `fase-4-manejo-errores` | Archivado |
+| 5 | `fase-5-seguridad` | Archivado |
+| 6 | `fase-6-testing` | Archivado |

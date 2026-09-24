@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ maintenance_config = {}
 def load_maintenance_config():
     """Carga configuración de mantenimiento"""
     global maintenance_config
-    
+
     if os.path.exists(MAINTENANCE_CONFIG_FILE):
-        with open(MAINTENANCE_CONFIG_FILE, 'r') as f:
+        with open(MAINTENANCE_CONFIG_FILE) as f:
             maintenance_config = json.load(f)
     else:
         maintenance_config = {
@@ -100,9 +99,9 @@ def export_maintenance_config(filename):
 def import_maintenance_config(filename):
     """Importa configuración de mantenimiento"""
     global maintenance_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             maintenance_config = json.load(f)
         save_maintenance_config()
         return True
@@ -111,11 +110,11 @@ def import_maintenance_config(filename):
 def validate_maintenance_config():
     """Valida configuración de mantenimiento"""
     errors = []
-    
+
     if "enabled" in maintenance_config:
         if not isinstance(maintenance_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     return errors
 
 def backup_maintenance_config():

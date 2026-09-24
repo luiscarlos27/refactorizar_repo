@@ -303,7 +303,7 @@ python benchmark_payroll.py             # Benchmark comparativo
 | 2 — Reestructuración básica | `fase-2-reestructuracion-basica` | Archivado |
 | 3 — Separación de responsabilidades | `fase-3-separacion-responsabilidades` | Archivado |
 | 4 — Manejo de errores | `fase-4-manejo-errores` | Archivado |
-| 5 — Seguridad | `fase-5-seguridad` | Pendiente |
-| 6 — Testing | `fase-6-testing` | Pendiente |
+| 5 — Seguridad | `fase-5-seguridad` | Archivado |
+| 6 — Testing | `fase-6-testing` | Archivado |
 
 📈 [Informe ejecutivo fases 1-4](refactorizar/proyecto_refactoring/docs/informe-ejecutivo.md): qué se realizó y qué se mejoró.

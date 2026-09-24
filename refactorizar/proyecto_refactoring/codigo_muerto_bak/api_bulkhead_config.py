@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_bulkhead_config = {}
 def load_api_bulkhead_config():
     """Carga configuración de bulkhead de API"""
     global api_bulkhead_config
-    
+
     if os.path.exists(API_BULKHEAD_CONFIG_FILE):
-        with open(API_BULKHEAD_CONFIG_FILE, 'r') as f:
+        with open(API_BULKHEAD_CONFIG_FILE) as f:
             api_bulkhead_config = json.load(f)
     else:
         api_bulkhead_config = {
@@ -100,9 +99,9 @@ def export_api_bulkhead_config(filename):
 def import_api_bulkhead_config(filename):
     """Importa configuración de bulkhead de API"""
     global api_bulkhead_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_bulkhead_config = json.load(f)
         save_api_bulkhead_config()
         return True
@@ -111,16 +110,16 @@ def import_api_bulkhead_config(filename):
 def validate_api_bulkhead_config():
     """Valida configuración de bulkhead de API"""
     errors = []
-    
+
     if "enabled" in api_bulkhead_config:
         if not isinstance(api_bulkhead_config["enabled"], bool):
             errors.append("enabled must be boolean")
-    
+
     for key in ["max_concurrent_calls", "max_wait_time", "timeout"]:
         if key in api_bulkhead_config:
             if not isinstance(api_bulkhead_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_bulkhead_config():

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ ui_config = {}
 def load_ui_config():
     """Carga configuración de UI"""
     global ui_config
-    
+
     if os.path.exists(UI_CONFIG_FILE):
-        with open(UI_CONFIG_FILE, 'r') as f:
+        with open(UI_CONFIG_FILE) as f:
             ui_config = json.load(f)
     else:
         ui_config = {
@@ -102,9 +101,9 @@ def export_ui_config(filename):
 def import_ui_config(filename):
     """Importa configuración de UI"""
     global ui_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             ui_config = json.load(f)
         save_ui_config()
         return True
@@ -113,15 +112,15 @@ def import_ui_config(filename):
 def validate_ui_config():
     """Valida configuración de UI"""
     errors = []
-    
+
     if "theme" in ui_config:
         if ui_config["theme"] not in ["dark", "light"]:
             errors.append("Invalid theme")
-    
+
     if "items_per_page" in ui_config:
         if not isinstance(ui_config["items_per_page"], int):
             errors.append("items_per_page must be integer")
-    
+
     return errors
 
 def backup_ui_config():

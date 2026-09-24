@@ -17,15 +17,14 @@ El proyecto hardcodea la API key de OMDB (`"trilogy"`) en el código y no valida
 
 ## Decisions
 
-- **`python-dotenv`**: carga el `.env` en el arranque; los clientes leen `OMDB_API_KEY` desde el entorno con valor por defecto vacío si no existe (documentado como desarrollo).
-- **Fallback de desarrollo**: se permite un valor por defecto solo de desarrollo (la demo key "trilogy") y solo si la variable no está definida, para no romper el flujo educativo; este fallback se elimina o se marca claramente como no apto para producción.
+- **`python-dotenv`**: carga el `.env` en el arranque; los clientes leen `OMDB_API_KEY` desde el entorno. Si la variable no está definida, la aplicación falla al arrancar con un mensaje claro (sin valores por defecto en el código).
 - **Validación de entrada en UI**: una función auxiliar de validación (`ui/validation.py` o dentro de `ui/menu.py`) reutilizable por las distintas opciones del menú.
 - **Validación de config**: en `config.py` al cargar (tipos y rangos), lanzando `ConfigError` (fase 4).
 - **Sanitización de archivos**: se permiten solo nombres base seguros (letras, números, `_`, `-`); se rechazan separadores de ruta.
 
 ## Risks / Trade-offs
 
-- [Fallback de clave en código reintroduce secreto] → Se elimina o se limita a entorno de desarrollo con advertencia de log; se audita con `security-reviewer`.
+- [Fallback de clave en código reintroduce secreto] → Resuelto: el fallback se elimina por completo (decisión del 2026-09-24); sin `OMDB_API_KEY` la app muestra error claro al arrancar. Se audita con `security-reviewer`.
 - [Validación excesiva complica la UX] → Mensajes claros y re-solicitud; se valida lo mínimo necesario para seguridad.
 - [Cambios en `.env` rompen la ejecución local] → `.env.example` documenta las variables; si falta la clave se muestra error claro, no crash silencioso.
 
@@ -43,4 +42,4 @@ El proyecto hardcodea la API key de OMDB (`"trilogy"`) en el código y no valida
 
 ## Open Questions
 
-- ¿El fallback de desarrollo de la demo key "trilogy" se mantiene o se elimina por completo? (Se asume mantener solo si es indispensable para la evaluación académica.)
+- (ninguna — el fallback "trilogy" se elimina por completo, decidido el 2026-09-24)

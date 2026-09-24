@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -12,9 +11,9 @@ users = []
 def load_users():
     """Carga usuarios"""
     global users
-    
+
     if os.path.exists(USER_FILE):
-        with open(USER_FILE, 'r') as f:
+        with open(USER_FILE) as f:
             users = json.load(f)
     else:
         users = []
@@ -30,7 +29,7 @@ def create_user(username, password, email=None):
     for user in users:
         if user["username"] == username:
             return False, "Usuario ya existe"
-    
+
     new_user = {
         "username": username,
         "password": password,  # No hasheada (mala práctica)
@@ -43,7 +42,7 @@ def create_user(username, password, email=None):
             "notifications": True
         }
     }
-    
+
     users.append(new_user)
     save_users()
     return True, "Usuario creado"
@@ -51,14 +50,14 @@ def create_user(username, password, email=None):
 def authenticate_user(username, password):
     """Autentica usuario"""
     global current_user
-    
+
     for user in users:
         if user["username"] == username and user["password"] == password:
             current_user = user
             user["last_login"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             save_users()
             return True, user
-    
+
     return False, "Credenciales inválidas"
 
 def logout_user():
@@ -82,7 +81,7 @@ def update_user(username, updates):
 def delete_user(username):
     """Elimina usuario"""
     global users
-    
+
     for i in range(len(users)):
         if users[i]["username"] == username:
             users.pop(i)
@@ -105,11 +104,11 @@ def search_users(query):
     """Busca usuarios"""
     results = []
     query_lower = query.lower()
-    
+
     for user in users:
         if query_lower in user["username"].lower():
             results.append(user)
-    
+
     return results
 
 def get_users_count():
@@ -140,15 +139,15 @@ def export_users(filename):
 def import_users(filename):
     """Importa usuarios"""
     global users
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             imported = json.load(f)
-        
+
         for user in imported:
             if not any(u["username"] == user["username"] for u in users):
                 users.append(user)
-        
+
         save_users()
         return True
     return False
@@ -156,13 +155,13 @@ def import_users(filename):
 def validate_user(username, password):
     """Valida usuario"""
     errors = []
-    
+
     if len(username) < 3:
         errors.append("Username must be at least 3 characters")
-    
+
     if len(password) < 6:
         errors.append("Password must be at least 6 characters")
-    
+
     return errors
 
 def get_user_stats():
@@ -172,13 +171,13 @@ def get_user_stats():
         "active": 0,
         "inactive": 0
     }
-    
+
     for user in users:
         if user.get("last_login"):
             stats["active"] += 1
         else:
             stats["inactive"] += 1
-    
+
     return stats
 
 def backup_users():
@@ -194,13 +193,13 @@ def restore_users(backup_name):
 def validate_users_integrity():
     """Valida integridad de usuarios"""
     errors = []
-    
+
     for i, user in enumerate(users):
         if "username" not in user:
             errors.append("User " + str(i) + " missing username")
         if "password" not in user:
             errors.append("User " + str(i) + " missing password")
-    
+
     return errors
 
 # Cargar usuarios al importar

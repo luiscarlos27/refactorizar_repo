@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_monitoring_config = {}
 def load_api_monitoring_config():
     """Carga configuración de monitoreo de API"""
     global api_monitoring_config
-    
+
     if os.path.exists(API_MONITORING_CONFIG_FILE):
-        with open(API_MONITORING_CONFIG_FILE, 'r') as f:
+        with open(API_MONITORING_CONFIG_FILE) as f:
             api_monitoring_config = json.load(f)
     else:
         api_monitoring_config = {
@@ -110,9 +109,9 @@ def export_api_monitoring_config(filename):
 def import_api_monitoring_config(filename):
     """Importa configuración de monitoreo de API"""
     global api_monitoring_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_monitoring_config = json.load(f)
         save_api_monitoring_config()
         return True
@@ -121,16 +120,16 @@ def import_api_monitoring_config(filename):
 def validate_api_monitoring_config():
     """Valida configuración de monitoreo de API"""
     errors = []
-    
+
     for key in ["enabled", "track_response_times", "track_error_rates"]:
         if key in api_monitoring_config:
             if not isinstance(api_monitoring_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     if "alert_threshold_ms" in api_monitoring_config:
         if not isinstance(api_monitoring_config["alert_threshold_ms"], int):
             errors.append("alert_threshold_ms must be integer")
-    
+
     return errors
 
 def backup_api_monitoring_config():

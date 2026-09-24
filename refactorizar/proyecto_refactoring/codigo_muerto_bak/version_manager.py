@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ version_info = {}
 def load_version():
     """Carga información de versión"""
     global version_info
-    
+
     if os.path.exists(VERSION_FILE):
-        with open(VERSION_FILE, 'r') as f:
+        with open(VERSION_FILE) as f:
             version_info = json.load(f)
     else:
         version_info = {
@@ -33,14 +32,14 @@ def get_current_version():
 def set_version(version):
     """Establece versión"""
     old_version = version_info.get("current", "1.0.0")
-    
+
     version_info["current"] = version
     version_info["history"].append({
         "from": old_version,
         "to": version,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
-    
+
     save_version()
 
 def get_version_history():
@@ -51,13 +50,13 @@ def increment_major():
     """Incrementa versión mayor"""
     current = get_current_version()
     parts = current.split(".")
-    
+
     if len(parts) >= 3:
         major = int(parts[0]) + 1
         new_version = str(major) + ".0.0"
     else:
         new_version = "2.0.0"
-    
+
     set_version(new_version)
     return new_version
 
@@ -65,14 +64,14 @@ def increment_minor():
     """Incrementa versión menor"""
     current = get_current_version()
     parts = current.split(".")
-    
+
     if len(parts) >= 3:
         major = parts[0]
         minor = int(parts[1]) + 1
         new_version = major + "." + str(minor) + ".0"
     else:
         new_version = "1.1.0"
-    
+
     set_version(new_version)
     return new_version
 
@@ -80,7 +79,7 @@ def increment_patch():
     """Incrementa versión parche"""
     current = get_current_version()
     parts = current.split(".")
-    
+
     if len(parts) >= 3:
         major = parts[0]
         minor = parts[1]
@@ -88,7 +87,7 @@ def increment_patch():
         new_version = major + "." + minor + "." + str(patch)
     else:
         new_version = "1.0.1"
-    
+
     set_version(new_version)
     return new_version
 
@@ -96,16 +95,16 @@ def compare_versions(version1, version2):
     """Compara versiones"""
     parts1 = version1.split(".")
     parts2 = version2.split(".")
-    
+
     for i in range(max(len(parts1), len(parts2))):
         v1 = int(parts1[i]) if i < len(parts1) else 0
         v2 = int(parts2[i]) if i < len(parts2) else 0
-        
+
         if v1 > v2:
             return 1
         elif v1 < v2:
             return -1
-    
+
     return 0
 
 def is_newer_version(version1, version2):
@@ -124,9 +123,9 @@ def export_version(filename):
 def import_version(filename):
     """Importa información de versión"""
     global version_info
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             version_info = json.load(f)
         save_version()
         return True
@@ -135,13 +134,13 @@ def import_version(filename):
 def validate_version():
     """Valida integridad de versión"""
     errors = []
-    
+
     if "current" not in version_info:
         errors.append("Missing current version")
-    
+
     if "history" not in version_info:
         errors.append("Missing version history")
-    
+
     return errors
 
 def backup_version():

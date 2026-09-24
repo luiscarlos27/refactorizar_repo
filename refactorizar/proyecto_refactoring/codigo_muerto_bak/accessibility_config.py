@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ accessibility_config = {}
 def load_accessibility_config():
     """Carga configuración de accesibilidad"""
     global accessibility_config
-    
+
     if os.path.exists(ACCESSIBILITY_CONFIG_FILE):
-        with open(ACCESSIBILITY_CONFIG_FILE, 'r') as f:
+        with open(ACCESSIBILITY_CONFIG_FILE) as f:
             accessibility_config = json.load(f)
     else:
         accessibility_config = {
@@ -115,9 +114,9 @@ def export_accessibility_config(filename):
 def import_accessibility_config(filename):
     """Importa configuración de accesibilidad"""
     global accessibility_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             accessibility_config = json.load(f)
         save_accessibility_config()
         return True
@@ -126,12 +125,12 @@ def import_accessibility_config(filename):
 def validate_accessibility_config():
     """Valida configuración de accesibilidad"""
     errors = []
-    
+
     for key in ["high_contrast", "large_text", "screen_reader", "keyboard_navigation"]:
         if key in accessibility_config:
             if not isinstance(accessibility_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_accessibility_config():

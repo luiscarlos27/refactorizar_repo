@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ database_config = {}
 def load_database_config():
     """Carga configuración de base de datos"""
     global database_config
-    
+
     if os.path.exists(DATABASE_CONFIG_FILE):
-        with open(DATABASE_CONFIG_FILE, 'r') as f:
+        with open(DATABASE_CONFIG_FILE) as f:
             database_config = json.load(f)
     else:
         database_config = {
@@ -100,9 +99,9 @@ def export_database_config(filename):
 def import_database_config(filename):
     """Importa configuración de base de datos"""
     global database_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             database_config = json.load(f)
         save_database_config()
         return True
@@ -111,15 +110,15 @@ def import_database_config(filename):
 def validate_database_config():
     """Valida configuración de base de datos"""
     errors = []
-    
+
     if "type" in database_config:
         if database_config["type"] not in ["json", "csv", "sqlite"]:
             errors.append("Invalid database type")
-    
+
     if "path" in database_config:
         if not database_config["path"]:
             errors.append("Database path cannot be empty")
-    
+
     return errors
 
 def backup_database_config():

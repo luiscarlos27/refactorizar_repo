@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ cache_config = {}
 def load_cache_config():
     """Carga configuración de caché"""
     global cache_config
-    
+
     if os.path.exists(CACHE_CONFIG_FILE):
-        with open(CACHE_CONFIG_FILE, 'r') as f:
+        with open(CACHE_CONFIG_FILE) as f:
             cache_config = json.load(f)
     else:
         cache_config = {
@@ -93,9 +92,9 @@ def export_cache_config(filename):
 def import_cache_config(filename):
     """Importa configuración de caché"""
     global cache_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             cache_config = json.load(f)
         save_cache_config()
         return True
@@ -104,15 +103,15 @@ def import_cache_config(filename):
 def validate_cache_config():
     """Valida configuración de caché"""
     errors = []
-    
+
     if "expiry_hours" in cache_config:
         if not isinstance(cache_config["expiry_hours"], int):
             errors.append("expiry_hours must be integer")
-    
+
     if "max_size_mb" in cache_config:
         if not isinstance(cache_config["max_size_mb"], int):
             errors.append("max_size_mb must be integer")
-    
+
     return errors
 
 def backup_cache_config():

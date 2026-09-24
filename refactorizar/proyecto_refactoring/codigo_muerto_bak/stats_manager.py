@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ stats = {}
 def load_stats():
     """Carga estadísticas"""
     global stats
-    
+
     if os.path.exists(STATS_FILE):
-        with open(STATS_FILE, 'r') as f:
+        with open(STATS_FILE) as f:
             stats = json.load(f)
     else:
         stats = {
@@ -31,42 +30,42 @@ def save_stats():
 def increment_search(search_type="movie"):
     """Incrementa contador de búsquedas"""
     stats["searches"]["total"] = stats["searches"].get("total", 0) + 1
-    
+
     by_type = stats["searches"].get("by_type", {})
     by_type[search_type] = by_type.get(search_type, 0) + 1
     stats["searches"]["by_type"] = by_type
-    
+
     today = datetime.now().strftime("%Y-%m-%d")
     by_date = stats["searches"].get("by_date", {})
     by_date[today] = by_date.get(today, 0) + 1
     stats["searches"]["by_date"] = by_date
-    
+
     save_stats()
 
 def increment_view(view_type="movie"):
     """Incrementa contador de vistas"""
     stats["views"]["total"] = stats["views"].get("total", 0) + 1
-    
+
     by_type = stats["views"].get("by_type", {})
     by_type[view_type] = by_type.get(view_type, 0) + 1
     stats["views"]["by_type"] = by_type
-    
+
     today = datetime.now().strftime("%Y-%m-%d")
     by_date = stats["views"].get("by_date", {})
     by_date[today] = by_date.get(today, 0) + 1
     stats["views"]["by_date"] = by_date
-    
+
     save_stats()
 
 def increment_favorite():
     """Incrementa contador de favoritas"""
     stats["favorites"]["total"] = stats["favorites"].get("total", 0) + 1
-    
+
     today = datetime.now().strftime("%Y-%m-%d")
     by_date = stats["favorites"].get("by_date", {})
     by_date[today] = by_date.get(today, 0) + 1
     stats["favorites"]["by_date"] = by_date
-    
+
     save_stats()
 
 def increment_session(duration=0):
@@ -78,11 +77,11 @@ def increment_session(duration=0):
 def increment_error(error_type="unknown"):
     """Incrementa contador de errores"""
     stats["errors"]["total"] = stats["errors"].get("total", 0) + 1
-    
+
     by_type = stats["errors"].get("by_type", {})
     by_type[error_type] = by_type.get(error_type, 0) + 1
     stats["errors"]["by_type"] = by_type
-    
+
     save_stats()
 
 def get_stats():
@@ -129,9 +128,9 @@ def export_stats(filename):
 def import_stats(filename):
     """Importa estadísticas"""
     global stats
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             stats = json.load(f)
         save_stats()
         return True
@@ -152,33 +151,33 @@ def print_stats():
     print("=" * 60)
     print("ESTADÍSTICAS DE LA APLICACIÓN")
     print("=" * 60)
-    
+
     summary = get_stats_summary()
     print("Búsquedas totales: " + str(summary["total_searches"]))
     print("Vistas totales: " + str(summary["total_views"]))
     print("Favoritas totales: " + str(summary["total_favorites"]))
     print("Sesiones totales: " + str(summary["total_sessions"]))
     print("Errores totales: " + str(summary["total_errors"]))
-    
+
     print("\nBúsquedas por tipo:")
     for search_type, count in stats.get("searches", {}).get("by_type", {}).items():
         print("  " + search_type + ": " + str(count))
-    
+
     print("\nVistas por tipo:")
     for view_type, count in stats.get("views", {}).get("by_type", {}).items():
         print("  " + view_type + ": " + str(count))
-    
+
     print("=" * 60)
 
 def validate_stats():
     """Valida integridad de estadísticas"""
     errors = []
-    
+
     required_keys = ["searches", "views", "favorites", "sessions", "errors"]
     for key in required_keys:
         if key not in stats:
             errors.append("Missing stats key: " + key)
-    
+
     return errors
 
 def backup_stats():

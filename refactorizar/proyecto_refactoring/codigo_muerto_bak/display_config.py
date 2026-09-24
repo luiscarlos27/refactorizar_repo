@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ display_config = {}
 def load_display_config():
     """Carga configuración de visualización"""
     global display_config
-    
+
     if os.path.exists(DISPLAY_CONFIG_FILE):
-        with open(DISPLAY_CONFIG_FILE, 'r') as f:
+        with open(DISPLAY_CONFIG_FILE) as f:
             display_config = json.load(f)
     else:
         display_config = {
@@ -121,9 +120,9 @@ def export_display_config(filename):
 def import_display_config(filename):
     """Importa configuración de visualización"""
     global display_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             display_config = json.load(f)
         save_display_config()
         return True
@@ -132,11 +131,11 @@ def import_display_config(filename):
 def validate_display_config():
     """Valida configuración de visualización"""
     errors = []
-    
+
     if "font_size" in display_config:
         if not isinstance(display_config["font_size"], int):
             errors.append("font_size must be integer")
-    
+
     return errors
 
 def backup_display_config():

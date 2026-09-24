@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ features = {}
 def load_features():
     """Carga funcionalidades"""
     global features
-    
+
     if os.path.exists(FEATURE_FILE):
-        with open(FEATURE_FILE, 'r') as f:
+        with open(FEATURE_FILE) as f:
             features = json.load(f)
     else:
         features = {}
@@ -26,7 +25,7 @@ def add_feature(name, feature_info=None):
     """Agrega funcionalidad"""
     if feature_info is None:
         feature_info = {}
-    
+
     features[name] = {
         "name": name,
         "enabled": True,
@@ -89,11 +88,11 @@ def search_features(query):
     """Busca funcionalidades"""
     results = {}
     query_lower = query.lower()
-    
+
     for name, feature in features.items():
         if query_lower in name.lower() or query_lower in feature.get("description", "").lower():
             results[name] = feature
-    
+
     return results
 
 def update_feature(name, updates):
@@ -132,13 +131,13 @@ def get_feature_stats():
         "enabled": 0,
         "disabled": 0
     }
-    
+
     for feature in features.values():
         if feature["enabled"]:
             stats["enabled"] += 1
         else:
             stats["disabled"] += 1
-    
+
     return stats
 
 def export_features(filename):
@@ -149,9 +148,9 @@ def export_features(filename):
 def import_features(filename):
     """Importa funcionalidades"""
     global features
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             features = json.load(f)
         save_features()
         return True
@@ -160,13 +159,13 @@ def import_features(filename):
 def validate_features():
     """Valida integridad de funcionalidades"""
     errors = []
-    
+
     for name, feature in features.items():
         if "name" not in feature:
             errors.append("Feature " + name + " missing name")
         if "enabled" not in feature:
             errors.append("Feature " + name + " missing enabled")
-    
+
     return errors
 
 def backup_features():

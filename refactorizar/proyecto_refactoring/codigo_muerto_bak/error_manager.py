@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ errors = []
 def load_errors():
     """Carga errores"""
     global errors
-    
+
     if os.path.exists(ERROR_FILE):
-        with open(ERROR_FILE, 'r') as f:
+        with open(ERROR_FILE) as f:
             errors = json.load(f)
     else:
         errors = []
@@ -94,11 +93,11 @@ def search_errors(query):
     """Busca errores"""
     results = []
     query_lower = query.lower()
-    
+
     for error in errors:
         if query_lower in error.get("message", "").lower():
             results.append(error)
-    
+
     return results
 
 def clear_errors():
@@ -115,16 +114,16 @@ def get_error_stats():
         "unresolved": 0,
         "by_type": {}
     }
-    
+
     for error in errors:
         if error["resolved"]:
             stats["resolved"] += 1
         else:
             stats["unresolved"] += 1
-        
+
         error_type = error.get("type", "unknown")
         stats["by_type"][error_type] = stats["by_type"].get(error_type, 0) + 1
-    
+
     return stats
 
 def export_errors(filename):
@@ -135,9 +134,9 @@ def export_errors(filename):
 def import_errors(filename):
     """Importa errores"""
     global errors
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             errors = json.load(f)
         save_errors()
         return True
@@ -146,7 +145,7 @@ def import_errors(filename):
 def validate_errors():
     """Valida integridad de errores"""
     validation_errors = []
-    
+
     for i, error in enumerate(errors):
         if "id" not in error:
             validation_errors.append("Error " + str(i) + " missing id")
@@ -154,7 +153,7 @@ def validate_errors():
             validation_errors.append("Error " + str(i) + " missing type")
         if "message" not in error:
             validation_errors.append("Error " + str(i) + " missing message")
-    
+
     return validation_errors
 
 def backup_errors():

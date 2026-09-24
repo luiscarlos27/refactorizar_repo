@@ -1,6 +1,6 @@
+import csv
 import json
 import os
-import csv
 from datetime import datetime
 
 # Variables globales
@@ -19,7 +19,7 @@ def init_data_dir():
 def load_data():
     """Carga datos desde archivo"""
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r') as f:
+        with open(DATA_FILE) as f:
             return json.load(f)
     return {"peliculas": [], "series": [], "favoritas": [], "historial": []}
 
@@ -94,12 +94,12 @@ def search_movies(query):
     movies = get_all_movies()
     results = []
     query_lower = query.lower()
-    
+
     for movie in movies:
         title = movie.get("titulo", movie.get("Title", "")).lower()
         if query_lower in title:
             results.append(movie)
-    
+
     return results
 
 def search_series(query):
@@ -107,12 +107,12 @@ def search_series(query):
     series = get_all_series()
     results = []
     query_lower = query.lower()
-    
+
     for s in series:
         name = s.get("nombre", s.get("name", "")).lower()
         if query_lower in name:
             results.append(s)
-    
+
     return results
 
 def create_backup():
@@ -120,16 +120,16 @@ def create_backup():
     data = load_data()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_filename = BACKUP_FILE.format(timestamp)
-    
+
     with open(backup_filename, 'w') as f:
         json.dump(data, f, indent=4)
-    
+
     return backup_filename
 
 def restore_backup(backup_file):
     """Restaura backup"""
     if os.path.exists(backup_file):
-        with open(backup_file, 'r') as f:
+        with open(backup_file) as f:
             data = json.load(f)
         save_data(data)
         return True
@@ -147,13 +147,13 @@ def list_backups():
 def export_to_csv(filename):
     """Exporta datos a CSV"""
     data = load_data()
-    
+
     with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
-        
+
         # Encabezados
         writer.writerow(["Tipo", "Título", "Año", "Rating", "Género"])
-        
+
         # Películas
         for movie in data.get("peliculas", []):
             writer.writerow([
@@ -163,7 +163,7 @@ def export_to_csv(filename):
                 movie.get("rating", movie.get("imdbRating", "")),
                 movie.get("genero", movie.get("Genre", ""))
             ])
-        
+
         # Series
         for series in data.get("series", []):
             writer.writerow([
@@ -177,10 +177,10 @@ def export_to_csv(filename):
 def import_from_csv(filename):
     """Importa datos desde CSV"""
     data = load_data()
-    
-    with open(filename, 'r') as f:
+
+    with open(filename) as f:
         reader = csv.DictReader(f)
-        
+
         for row in reader:
             if row["Tipo"] == "Película":
                 movie = {
@@ -197,13 +197,13 @@ def import_from_csv(filename):
                     "genero": row["Género"]
                 }
                 data["series"].append(series)
-    
+
     save_data(data)
 
 def get_stats():
     """Obtiene estadísticas de datos"""
     data = load_data()
-    
+
     return {
         "total_peliculas": len(data.get("peliculas", [])),
         "total_series": len(data.get("series", [])),
@@ -236,14 +236,14 @@ def validate_data():
     """Valida integridad de datos"""
     data = load_data()
     errors = []
-    
+
     required_keys = ["peliculas", "series", "favoritas", "historial"]
     for key in required_keys:
         if key not in data:
             errors.append("Falta clave: " + key)
         elif not isinstance(data[key], list):
             errors.append("Clave " + key + " no es lista")
-    
+
     return errors
 
 # Inicializar directorios

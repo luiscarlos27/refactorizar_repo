@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ backup_config = {}
 def load_backup_config():
     """Carga configuración de backup"""
     global backup_config
-    
+
     if os.path.exists(BACKUP_CONFIG_FILE):
-        with open(BACKUP_CONFIG_FILE, 'r') as f:
+        with open(BACKUP_CONFIG_FILE) as f:
             backup_config = json.load(f)
     else:
         backup_config = {
@@ -116,9 +115,9 @@ def export_backup_config(filename):
 def import_backup_config(filename):
     """Importa configuración de backup"""
     global backup_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             backup_config = json.load(f)
         save_backup_config()
         return True
@@ -127,15 +126,15 @@ def import_backup_config(filename):
 def validate_backup_config():
     """Valida configuración de backup"""
     errors = []
-    
+
     if "interval_hours" in backup_config:
         if not isinstance(backup_config["interval_hours"], int):
             errors.append("interval_hours must be integer")
-    
+
     if "max_backups" in backup_config:
         if not isinstance(backup_config["max_backups"], int):
             errors.append("max_backups must be integer")
-    
+
     return errors
 
 def backup_backup_config():

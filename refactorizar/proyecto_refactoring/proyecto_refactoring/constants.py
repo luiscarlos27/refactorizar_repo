@@ -3,8 +3,6 @@
 OMDB_BASE_URL = "http://www.omdbapi.com/"
 TVMAZE_BASE_URL = "http://api.tvmaze.com"
 
-OMDB_API_KEY = "trilogy"
-
 DEFAULT_TIMEOUT = 30
 DEFAULT_MAX_RETRIES = 3
 

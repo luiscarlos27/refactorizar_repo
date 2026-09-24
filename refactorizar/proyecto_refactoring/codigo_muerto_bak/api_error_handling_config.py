@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_error_handling_config = {}
 def load_api_error_handling_config():
     """Carga configuración de manejo de errores de API"""
     global api_error_handling_config
-    
+
     if os.path.exists(API_ERROR_HANDLING_CONFIG_FILE):
-        with open(API_ERROR_HANDLING_CONFIG_FILE, 'r') as f:
+        with open(API_ERROR_HANDLING_CONFIG_FILE) as f:
             api_error_handling_config = json.load(f)
     else:
         api_error_handling_config = {
@@ -110,9 +109,9 @@ def export_api_error_handling_config(filename):
 def import_api_error_handling_config(filename):
     """Importa configuración de manejo de errores de API"""
     global api_error_handling_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_error_handling_config = json.load(f)
         save_api_error_handling_config()
         return True
@@ -121,12 +120,12 @@ def import_api_error_handling_config(filename):
 def validate_api_error_handling_config():
     """Valida configuración de manejo de errores de API"""
     errors = []
-    
+
     for key in ["log_errors", "show_user_errors", "include_stack_trace"]:
         if key in api_error_handling_config:
             if not isinstance(api_error_handling_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     return errors
 
 def backup_api_error_handling_config():

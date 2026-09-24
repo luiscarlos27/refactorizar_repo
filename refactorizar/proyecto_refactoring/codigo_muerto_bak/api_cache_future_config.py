@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_future_config = {}
 def load_api_cache_future_config():
     """Carga configuración futura de caché de API"""
     global api_cache_future_config
-    
+
     if os.path.exists(API_CACHE_FUTURE_CONFIG_FILE):
-        with open(API_CACHE_FUTURE_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_FUTURE_CONFIG_FILE) as f:
             api_cache_future_config = json.load(f)
     else:
         api_cache_future_config = {
@@ -73,7 +72,7 @@ def add_roadmap_item(item):
     """Agrega item al roadmap"""
     if "roadmap" not in api_cache_future_config:
         api_cache_future_config["roadmap"] = []
-    
+
     if item not in api_cache_future_config["roadmap"]:
         api_cache_future_config["roadmap"].append(item)
         save_api_cache_future_config()
@@ -102,7 +101,7 @@ def add_beta_feature(feature):
     """Agrega característica beta"""
     if "beta_features" not in api_cache_future_config:
         api_cache_future_config["beta_features"] = []
-    
+
     if feature not in api_cache_future_config["beta_features"]:
         api_cache_future_config["beta_features"].append(feature)
         save_api_cache_future_config()
@@ -131,7 +130,7 @@ def add_research_area(area):
     """Agrega área de investigación"""
     if "research_areas" not in api_cache_future_config:
         api_cache_future_config["research_areas"] = []
-    
+
     if area not in api_cache_future_config["research_areas"]:
         api_cache_future_config["research_areas"].append(area)
         save_api_cache_future_config()
@@ -155,9 +154,9 @@ def export_api_cache_future_config(filename):
 def import_api_cache_future_config(filename):
     """Importa configuración futura de caché de API"""
     global api_cache_future_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_future_config = json.load(f)
         save_api_cache_future_config()
         return True
@@ -166,12 +165,12 @@ def import_api_cache_future_config(filename):
 def validate_api_cache_future_config():
     """Valida configuración futura de caché de API"""
     errors = []
-    
+
     for key in ["roadmap", "beta_features", "research_areas"]:
         if key in api_cache_future_config:
             if not isinstance(api_cache_future_config[key], list):
                 errors.append(key + " must be list")
-    
+
     return errors
 
 def backup_api_cache_future_config():

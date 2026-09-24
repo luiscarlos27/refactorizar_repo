@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ network_config = {}
 def load_network_config():
     """Carga configuración de red"""
     global network_config
-    
+
     if os.path.exists(NETWORK_CONFIG_FILE):
-        with open(NETWORK_CONFIG_FILE, 'r') as f:
+        with open(NETWORK_CONFIG_FILE) as f:
             network_config = json.load(f)
     else:
         network_config = {
@@ -111,9 +110,9 @@ def export_network_config(filename):
 def import_network_config(filename):
     """Importa configuración de red"""
     global network_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             network_config = json.load(f)
         save_network_config()
         return True
@@ -122,15 +121,15 @@ def import_network_config(filename):
 def validate_network_config():
     """Valida configuración de red"""
     errors = []
-    
+
     if "timeout" in network_config:
         if not isinstance(network_config["timeout"], int):
             errors.append("timeout must be integer")
-    
+
     if "max_retries" in network_config:
         if not isinstance(network_config["max_retries"], int):
             errors.append("max_retries must be integer")
-    
+
     return errors
 
 def backup_network_config():

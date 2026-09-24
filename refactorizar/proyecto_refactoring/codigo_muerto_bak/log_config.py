@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ log_config = {}
 def load_log_config():
     """Carga configuración de log"""
     global log_config
-    
+
     if os.path.exists(LOG_CONFIG_FILE):
-        with open(LOG_CONFIG_FILE, 'r') as f:
+        with open(LOG_CONFIG_FILE) as f:
             log_config = json.load(f)
     else:
         log_config = {
@@ -111,9 +110,9 @@ def export_log_config(filename):
 def import_log_config(filename):
     """Importa configuración de log"""
     global log_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             log_config = json.load(f)
         save_log_config()
         return True
@@ -122,15 +121,15 @@ def import_log_config(filename):
 def validate_log_config():
     """Valida configuración de log"""
     errors = []
-    
+
     if "level" in log_config:
         if log_config["level"] not in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
             errors.append("Invalid log level")
-    
+
     if "max_size_mb" in log_config:
         if not isinstance(log_config["max_size_mb"], int):
             errors.append("max_size_mb must be integer")
-    
+
     return errors
 
 def backup_log_config():

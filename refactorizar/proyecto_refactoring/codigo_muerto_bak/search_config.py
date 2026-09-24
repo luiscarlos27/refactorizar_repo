@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ search_config = {}
 def load_search_config():
     """Carga configuración de búsqueda"""
     global search_config
-    
+
     if os.path.exists(SEARCH_CONFIG_FILE):
-        with open(SEARCH_CONFIG_FILE, 'r') as f:
+        with open(SEARCH_CONFIG_FILE) as f:
             search_config = json.load(f)
     else:
         search_config = {
@@ -121,9 +120,9 @@ def export_search_config(filename):
 def import_search_config(filename):
     """Importa configuración de búsqueda"""
     global search_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             search_config = json.load(f)
         save_search_config()
         return True
@@ -132,15 +131,15 @@ def import_search_config(filename):
 def validate_search_config():
     """Valida configuración de búsqueda"""
     errors = []
-    
+
     if "max_results" in search_config:
         if not isinstance(search_config["max_results"], int):
             errors.append("max_results must be integer")
-    
+
     if "min_score" in search_config:
         if not isinstance(search_config["min_score"], (int, float)):
             errors.append("min_score must be number")
-    
+
     return errors
 
 def backup_search_config():

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_cache_legacy_config = {}
 def load_api_cache_legacy_config():
     """Carga configuración legacy de caché de API"""
     global api_cache_legacy_config
-    
+
     if os.path.exists(API_CACHE_LEGACY_CONFIG_FILE):
-        with open(API_CACHE_LEGACY_CONFIG_FILE, 'r') as f:
+        with open(API_CACHE_LEGACY_CONFIG_FILE) as f:
             api_cache_legacy_config = json.load(f)
     else:
         api_cache_legacy_config = {
@@ -92,7 +91,7 @@ def add_deprecated_feature(feature):
     """Agrega característica deprecada"""
     if "deprecated_features" not in api_cache_legacy_config:
         api_cache_legacy_config["deprecated_features"] = []
-    
+
     if feature not in api_cache_legacy_config["deprecated_features"]:
         api_cache_legacy_config["deprecated_features"].append(feature)
         save_api_cache_legacy_config()
@@ -130,9 +129,9 @@ def export_api_cache_legacy_config(filename):
 def import_api_cache_legacy_config(filename):
     """Importa configuración legacy de caché de API"""
     global api_cache_legacy_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_cache_legacy_config = json.load(f)
         save_api_cache_legacy_config()
         return True
@@ -141,16 +140,16 @@ def import_api_cache_legacy_config(filename):
 def validate_api_cache_legacy_config():
     """Valida configuración legacy de caché de API"""
     errors = []
-    
+
     for key in ["legacy_mode", "backward_compatibility", "migration_required"]:
         if key in api_cache_legacy_config:
             if not isinstance(api_cache_legacy_config[key], bool):
                 errors.append(key + " must be boolean")
-    
+
     if "deprecated_features" in api_cache_legacy_config:
         if not isinstance(api_cache_legacy_config["deprecated_features"], list):
             errors.append("deprecated_features must be list")
-    
+
     return errors
 
 def backup_api_cache_legacy_config():

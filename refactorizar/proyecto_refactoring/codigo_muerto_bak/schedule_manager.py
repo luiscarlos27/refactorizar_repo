@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ schedule = []
 def load_schedule():
     """Carga horarios"""
     global schedule
-    
+
     if os.path.exists(SCHEDULE_FILE):
-        with open(SCHEDULE_FILE, 'r') as f:
+        with open(SCHEDULE_FILE) as f:
             schedule = json.load(f)
     else:
         schedule = []
@@ -79,33 +78,33 @@ def search_events(query):
     """Busca eventos"""
     events = []
     query_lower = query.lower()
-    
+
     for event in schedule:
         if query_lower in event.get("title", "").lower():
             events.append(event)
-    
+
     return events
 
 def get_upcoming_events(count=10):
     """Obtiene eventos próximos"""
     today = datetime.now().strftime("%Y-%m-%d")
     upcoming = []
-    
+
     for event in schedule:
         if event.get("date", "") >= today:
             upcoming.append(event)
-    
+
     return upcoming[:count]
 
 def get_past_events(count=10):
     """Obtiene eventos pasados"""
     today = datetime.now().strftime("%Y-%m-%d")
     past = []
-    
+
     for event in schedule:
         if event.get("date", "") < today:
             past.append(event)
-    
+
     return past[-count:]
 
 def clear_schedule():
@@ -122,9 +121,9 @@ def export_schedule(filename):
 def import_schedule(filename):
     """Importa horarios"""
     global schedule
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             schedule = json.load(f)
         save_schedule()
         return True
@@ -137,20 +136,20 @@ def get_schedule_stats():
         "by_type": {},
         "by_date": {}
     }
-    
+
     for event in schedule:
         event_type = event.get("type", "unknown")
         stats["by_type"][event_type] = stats["by_type"].get(event_type, 0) + 1
-        
+
         date = event.get("date", "unknown")
         stats["by_date"][date] = stats["by_date"].get(date, 0) + 1
-    
+
     return stats
 
 def validate_schedule():
     """Valida integridad de horarios"""
     errors = []
-    
+
     for i, event in enumerate(schedule):
         if "id" not in event:
             errors.append("Event " + str(i) + " missing id")
@@ -158,7 +157,7 @@ def validate_schedule():
             errors.append("Event " + str(i) + " missing title")
         if "date" not in event:
             errors.append("Event " + str(i) + " missing date")
-    
+
     return errors
 
 def backup_schedule():

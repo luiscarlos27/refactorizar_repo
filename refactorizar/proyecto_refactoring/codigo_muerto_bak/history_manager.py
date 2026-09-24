@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -19,9 +18,9 @@ def init_history():
 def load_history():
     """Carga historial"""
     global search_history
-    
+
     if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, 'r') as f:
+        with open(HISTORY_FILE) as f:
             search_history = json.load(f)
     else:
         search_history = []
@@ -39,13 +38,13 @@ def add_search(query, results_count, search_type="movie"):
         "search_type": search_type,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    
+
     search_history.insert(0, entry)
-    
+
     # Mantener límite
     if len(search_history) > MAX_HISTORY:
         search_history = search_history[:MAX_HISTORY]
-    
+
     save_history()
 
 def get_history():
@@ -62,31 +61,31 @@ def search_history_by_query(query):
     """Busca en historial por consulta"""
     results = []
     query_lower = query.lower()
-    
+
     for entry in search_history:
         if query_lower in entry["query"].lower():
             results.append(entry)
-    
+
     return results
 
 def search_history_by_type(search_type):
     """Busca en historial por tipo"""
     results = []
-    
+
     for entry in search_history:
         if entry["search_type"] == search_type:
             results.append(entry)
-    
+
     return results
 
 def search_history_by_date(date_str):
     """Busca en historial por fecha"""
     results = []
-    
+
     for entry in search_history:
         if date_str in entry["timestamp"]:
             results.append(entry)
-    
+
     return results
 
 def get_recent_searches(count=10):
@@ -96,11 +95,11 @@ def get_recent_searches(count=10):
 def get_popular_searches(count=10):
     """Obtiene búsquedas más populares"""
     query_count = {}
-    
+
     for entry in search_history:
         query = entry["query"]
         query_count[query] = query_count.get(query, 0) + 1
-    
+
     sorted_queries = sorted(query_count.items(), key=lambda x: x[1], reverse=True)
     return sorted_queries[:count]
 
@@ -112,21 +111,21 @@ def get_search_stats():
         "by_date": {},
         "avg_results": 0
     }
-    
+
     total_results = 0
-    
+
     for entry in search_history:
         search_type = entry["search_type"]
         stats["by_type"][search_type] = stats["by_type"].get(search_type, 0) + 1
-        
+
         date = entry["timestamp"].split(" ")[0]
         stats["by_date"][date] = stats["by_date"].get(date, 0) + 1
-        
+
         total_results += entry["results_count"]
-    
+
     if len(search_history) > 0:
         stats["avg_results"] = total_results / len(search_history)
-    
+
     return stats
 
 def export_history(filename):
@@ -137,17 +136,17 @@ def export_history(filename):
 def import_history(filename):
     """Importa historial"""
     global search_history
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             imported_history = json.load(f)
-        
+
         search_history = imported_history + search_history
-        
+
         # Mantener límite
         if len(search_history) > MAX_HISTORY:
             search_history = search_history[:MAX_HISTORY]
-        
+
         save_history()
         return True
     return False
@@ -185,7 +184,7 @@ def restore_history(backup_name):
 def validate_history():
     """Valida integridad del historial"""
     errors = []
-    
+
     for i, entry in enumerate(search_history):
         if "query" not in entry:
             errors.append("Entry " + str(i) + " missing query")
@@ -193,7 +192,7 @@ def validate_history():
             errors.append("Entry " + str(i) + " missing timestamp")
         if "search_type" not in entry:
             errors.append("Entry " + str(i) + " missing search_type")
-    
+
     return errors
 
 # Inicializar historial al importar

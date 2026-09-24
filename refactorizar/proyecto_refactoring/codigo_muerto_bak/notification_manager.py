@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ notifications = []
 def load_notifications():
     """Carga notificaciones"""
     global notifications
-    
+
     if os.path.exists(NOTIFICATION_FILE):
-        with open(NOTIFICATION_FILE, 'r') as f:
+        with open(NOTIFICATION_FILE) as f:
             notifications = json.load(f)
     else:
         notifications = []
@@ -94,11 +93,11 @@ def search_notifications(query):
     """Busca notificaciones"""
     results = []
     query_lower = query.lower()
-    
+
     for notification in notifications:
         if query_lower in notification.get("message", "").lower():
             results.append(notification)
-    
+
     return results
 
 def clear_notifications():
@@ -115,16 +114,16 @@ def get_notification_stats():
         "read": 0,
         "by_type": {}
     }
-    
+
     for notification in notifications:
         if notification["read"]:
             stats["read"] += 1
         else:
             stats["unread"] += 1
-        
+
         ntype = notification.get("type", "unknown")
         stats["by_type"][ntype] = stats["by_type"].get(ntype, 0) + 1
-    
+
     return stats
 
 def export_notifications(filename):
@@ -135,9 +134,9 @@ def export_notifications(filename):
 def import_notifications(filename):
     """Importa notificaciones"""
     global notifications
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             notifications = json.load(f)
         save_notifications()
         return True
@@ -146,13 +145,13 @@ def import_notifications(filename):
 def validate_notifications():
     """Valida integridad de notificaciones"""
     errors = []
-    
+
     for i, notification in enumerate(notifications):
         if "id" not in notification:
             errors.append("Notification " + str(i) + " missing id")
         if "message" not in notification:
             errors.append("Notification " + str(i) + " missing message")
-    
+
     return errors
 
 def backup_notifications():

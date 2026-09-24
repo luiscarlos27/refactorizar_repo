@@ -1,11 +1,12 @@
 """Navegacion y flujos interactivos. Delegan en servicios inyectados."""
 
 from config import AppConfig
-from exceptions import AppError, MovieNotFoundError, SeriesNotFoundError
+from exceptions import AppError, ConfigError, MovieNotFoundError, SeriesNotFoundError
 from services.movie_service import MovieService
 from services.series_service import SeriesService
 
 from ui import display
+from ui.validation import pedir_entero_en_rango, pedir_texto, sanitizar_nombre_archivo
 
 
 class Menu:
@@ -75,7 +76,7 @@ class Menu:
 
     def _buscar_pelicula(self) -> None:
         """Flujo de busqueda de pelicula por titulo."""
-        titulo = input("Ingrese el titulo de la pelicula: ")
+        titulo = pedir_texto("Ingrese el titulo de la pelicula: ")
         print("Buscando...")
         display.delay(1)
 
@@ -108,7 +109,7 @@ class Menu:
 
     def _buscar_actor(self) -> None:
         """Flujo de busqueda de peliculas por actor."""
-        actor = input("Ingrese el nombre del actor: ")
+        actor = pedir_texto("Ingrese el nombre del actor: ")
         print("Buscando peliculas del actor...")
 
         peliculas = self._movie_service.buscar_por_actor(actor)
@@ -116,15 +117,17 @@ class Menu:
         if len(peliculas) > 0:
             display.mostrar_lista_peliculas(peliculas)
 
-            opcion = input("\nSeleccione una pelicula para ver detalles (0 para volver): ")
-            if opcion.isdigit():
-                indice = int(opcion) - 1
-                if 0 <= indice < len(peliculas):
-                    try:
-                        detalles = self._movie_service.buscar_por_titulo(peliculas[indice].title)
-                        display.mostrar_pelicula(detalles)
-                    except AppError:
-                        print("No se pudo completar la búsqueda")
+            indice = pedir_entero_en_rango(
+                "\nSeleccione una pelicula para ver detalles (0 para volver): ",
+                0,
+                len(peliculas),
+            )
+            if indice is not None and indice > 0:
+                try:
+                    detalles = self._movie_service.buscar_por_titulo(peliculas[indice - 1].title)
+                    display.mostrar_pelicula(detalles)
+                except AppError:
+                    print("No se pudo completar la búsqueda")
         else:
             print("No se encontraron peliculas para ese actor")
 
@@ -132,7 +135,7 @@ class Menu:
 
     def _buscar_series(self) -> None:
         """Flujo de busqueda de series."""
-        nombre = input("Ingrese el nombre de la serie: ")
+        nombre = pedir_texto("Ingrese el nombre de la serie: ")
         print("Buscando series...")
 
         try:
@@ -150,17 +153,19 @@ class Menu:
             for i, serie in enumerate(series, start=1):
                 print(f"{i}. {serie.name} ({serie.status or ''})")
 
-            opcion = input("\nSeleccione una serie para ver detalles (0 para volver): ")
-            if opcion.isdigit():
-                indice = int(opcion) - 1
-                if 0 <= indice < len(series):
-                    id_serie = series[indice].id_
-                    if id_serie is not None:
-                        detalles = self._series_service.obtener_detalles(id_serie)
-                        if detalles is not None:
-                            display.mostrar_serie(detalles)
-                        else:
-                            print("No se pudo completar la búsqueda")
+            indice = pedir_entero_en_rango(
+                "\nSeleccione una serie para ver detalles (0 para volver): ",
+                0,
+                len(series),
+            )
+            if indice is not None and indice > 0:
+                id_serie = series[indice - 1].id_
+                if id_serie is not None:
+                    detalles = self._series_service.obtener_detalles(id_serie)
+                    if detalles is not None:
+                        display.mostrar_serie(detalles)
+                    else:
+                        print("No se pudo completar la búsqueda")
         else:
             print("No se pudo completar la búsqueda")
 
@@ -176,7 +181,7 @@ class Menu:
     def _buscar_por_genero(self) -> None:
         """Flujo de busqueda de peliculas por genero."""
         print("Generos disponibles: accion, comedia")
-        genero = input("Ingrese el genero: ")
+        genero = pedir_texto("Ingrese el genero: ", max_len=20)
         print("Buscando...")
 
         peliculas = self._movie_service.buscar_por_genero(genero)
@@ -193,13 +198,15 @@ class Menu:
             for i, pelicula in enumerate(favoritas, start=1):
                 print(f"{i}. {pelicula.title}")
 
-            opcion = input("\nDesea eliminar alguna? (numero o Enter para volver): ")
-            if opcion.isdigit():
-                indice = int(opcion) - 1
-                if 0 <= indice < len(favoritas) and self._movie_service.eliminar_favorita(
-                    favoritas[indice].title
-                ):
-                    print("Eliminada de favoritos")
+            indice = pedir_entero_en_rango(
+                "\nDesea eliminar alguna? (numero o Enter para volver): ",
+                0,
+                len(favoritas),
+            )
+            if indice is not None and indice > 0 and self._movie_service.eliminar_favorita(
+                favoritas[indice - 1].title
+            ):
+                print("Eliminada de favoritos")
         else:
             print("No tienes peliculas favoritas")
 
@@ -233,14 +240,22 @@ class Menu:
 
     def _exportar(self) -> None:
         """Exporta los datos a un archivo JSON."""
-        nombre = input("Nombre del archivo (sin extension): ")
+        nombre = _pedir_nombre_archivo()
+        if nombre is None:
+            print("Nombre de archivo invalido (sin separadores de ruta)")
+            input("\nPresione Enter para continuar...")
+            return
         self._movie_service.exportar_a_json(f"{nombre}.json")
         print(f"Exportado a {nombre}.json")
         input("\nPresione Enter para continuar...")
 
     def _importar(self) -> None:
         """Importa los datos desde un archivo JSON."""
-        nombre = input("Nombre del archivo (sin extension): ")
+        nombre = _pedir_nombre_archivo()
+        if nombre is None:
+            print("Nombre de archivo invalido (sin separadores de ruta)")
+            input("\nPresione Enter para continuar...")
+            return
         try:
             self._movie_service.importar_a_json(f"{nombre}.json")
             print(f"Importado desde {nombre}.json")
@@ -265,7 +280,14 @@ class Menu:
         elif opcion == "3":
             try:
                 self._config.timeout = int(input("Nuevo timeout: "))
-            except ValueError:
-                print("Timeout invalido")
+                print(f"Timeout ahora es: {self._config.timeout}")
+            except (ValueError, ConfigError):
+                print("Timeout invalido (debe ser un numero positivo)")
 
         input("\nPresione Enter para continuar...")
+
+
+def _pedir_nombre_archivo() -> str | None:
+    """Solicita y valida un nombre base de archivo para export/import."""
+    nombre = input("Nombre del archivo (sin extension): ")
+    return sanitizar_nombre_archivo(nombre)

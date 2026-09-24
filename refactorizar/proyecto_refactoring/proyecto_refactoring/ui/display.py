@@ -1,6 +1,5 @@
 """Renderizado de datos en terminal. Sin logica de negocio ni estado."""
 
-import os
 import time
 
 from models.movie import Movie
@@ -8,8 +7,8 @@ from models.series import Series
 
 
 def clear_screen() -> None:
-    """Limpia la pantalla de la consola."""
-    os.system("cls" if os.name == "nt" else "clear")
+    """Limpia la pantalla de la consola con una secuencia ANSI."""
+    print("\033[2J\033[H", end="")
 
 
 def print_separator(char: str = "=", length: int = 60) -> None:

@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ api_timeout_retry_config = {}
 def load_api_timeout_retry_config():
     """Carga configuración de timeout y retry de API"""
     global api_timeout_retry_config
-    
+
     if os.path.exists(API_TIMEOUT_RETRY_CONFIG_FILE):
-        with open(API_TIMEOUT_RETRY_CONFIG_FILE, 'r') as f:
+        with open(API_TIMEOUT_RETRY_CONFIG_FILE) as f:
             api_timeout_retry_config = json.load(f)
     else:
         api_timeout_retry_config = {
@@ -100,9 +99,9 @@ def export_api_timeout_retry_config(filename):
 def import_api_timeout_retry_config(filename):
     """Importa configuración de timeout y retry de API"""
     global api_timeout_retry_config
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             api_timeout_retry_config = json.load(f)
         save_api_timeout_retry_config()
         return True
@@ -111,16 +110,16 @@ def import_api_timeout_retry_config(filename):
 def validate_api_timeout_retry_config():
     """Valida configuración de timeout y retry de API"""
     errors = []
-    
+
     if "retry_on_timeout" in api_timeout_retry_config:
         if not isinstance(api_timeout_retry_config["retry_on_timeout"], bool):
             errors.append("retry_on_timeout must be boolean")
-    
+
     for key in ["connect_timeout", "read_timeout", "write_timeout"]:
         if key in api_timeout_retry_config:
             if not isinstance(api_timeout_retry_config[key], int):
                 errors.append(key + " must be integer")
-    
+
     return errors
 
 def backup_api_timeout_retry_config():

@@ -72,6 +72,11 @@ Beneficios derivados:
 - Fases 1–4 archivadas bajo OpenSpec en `openspec/changes/archive/` y consolidadas en `openspec/specs/`.
 - Cambios de fase 5 en adelante: en curso según `openspec/changes/`.
 
+### Diagramas de flujo
+
+- [Línea base (antes del refactoring)](docs/diagramas/flujo_proyecto_legacy.html)
+- [Proyecto refactorizado (tras fases 1-4)](docs/diagramas/flujo_proyecto_refactorizado.html)
+
 ---
 
 ## 5. Próximos pasos

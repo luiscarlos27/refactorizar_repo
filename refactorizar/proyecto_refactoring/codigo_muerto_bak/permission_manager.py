@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ permissions = {}
 def load_permissions():
     """Carga permisos"""
     global permissions
-    
+
     if os.path.exists(PERMISSION_FILE):
-        with open(PERMISSION_FILE, 'r') as f:
+        with open(PERMISSION_FILE) as f:
             permissions = json.load(f)
     else:
         permissions = {}
@@ -74,22 +73,22 @@ def has_permission(role, permission):
 def get_roles_with_permission(permission):
     """Obtiene roles con un permiso específico"""
     roles = []
-    
+
     for role, info in permissions.items():
         if permission in info["permissions"]:
             roles.append(role)
-    
+
     return roles
 
 def search_permissions(query):
     """Busca permisos"""
     results = {}
     query_lower = query.lower()
-    
+
     for role, info in permissions.items():
         if query_lower in role.lower():
             results[role] = info
-    
+
     return results
 
 def clear_permissions():
@@ -105,13 +104,13 @@ def get_permission_stats():
         "total_permissions": 0,
         "avg_permissions_per_role": 0
     }
-    
+
     for info in permissions.values():
         stats["total_permissions"] += len(info.get("permissions", []))
-    
+
     if len(permissions) > 0:
         stats["avg_permissions_per_role"] = stats["total_permissions"] / len(permissions)
-    
+
     return stats
 
 def export_permissions(filename):
@@ -122,9 +121,9 @@ def export_permissions(filename):
 def import_permissions(filename):
     """Importa permisos"""
     global permissions
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             permissions = json.load(f)
         save_permissions()
         return True
@@ -133,13 +132,13 @@ def import_permissions(filename):
 def validate_permissions():
     """Valida integridad de permisos"""
     errors = []
-    
+
     for role, info in permissions.items():
         if "role" not in info:
             errors.append("Role " + role + " missing role field")
         if "permissions" not in info:
             errors.append("Role " + role + " missing permissions")
-    
+
     return errors
 
 def backup_permissions():

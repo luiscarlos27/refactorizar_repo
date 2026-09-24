@@ -1,9 +1,8 @@
-import requests
-import json
-import sys
 import os
+import sys
 import time
-import random
+
+import requests
 
 # Variables globales
 API_KEY = "trilogy"
@@ -35,11 +34,11 @@ def buscar_pelicula_omdb(titulo):
     if titulo in CACHE:
         print("Usando cache...")
         return CACHE[titulo]
-    
+
     url = OMDB_BASE_URL + "?t=" + titulo + "&apikey=" + API_KEY
     response = requests.get(url)
     data = response.json()
-    
+
     if data.get("Response") == "True":
         CACHE[titulo] = data
         return data
@@ -52,11 +51,11 @@ def buscar_series_tvmaze(nombre):
     if cache_key in CACHE:
         print("Usando cache de series...")
         return CACHE[cache_key]
-    
+
     url = TVMAZE_BASE_URL + "/search/shows?q=" + nombre
     response = requests.get(url)
     data = response.json()
-    
+
     CACHE[cache_key] = data
     return data
 
@@ -69,7 +68,7 @@ def buscar_peliculas_por_actor(nombre_actor):
     url = OMDB_BASE_URL + "?s=" + nombre_actor + "&type=movie&apikey=" + API_KEY
     response = requests.get(url)
     data = response.json()
-    
+
     if data.get("Response") == "True":
         return data.get("Search", [])
     return []
@@ -91,7 +90,7 @@ def mostrar_pelicula(pelicula):
     if pelicula is None:
         print("No se encontró la película")
         return
-    
+
     print("Título: " + pelicula.get("Title", "N/A"))
     print("Año: " + pelicula.get("Year", "N/A"))
     print("Rating: " + pelicula.get("imdbRating", "N/A"))
@@ -128,9 +127,9 @@ def menu_principal():
         print("5. Ver favoritos")
         print("6. Ver historial")
         print("7. Salir")
-        
+
         opcion = input("\nSeleccione una opción: ")
-        
+
         if opcion == "1":
             funcion_buscar_pelicula()
         elif opcion == "2":
@@ -154,31 +153,31 @@ def funcion_buscar_pelicula():
     titulo = input("Ingrese el título de la película: ")
     print("Buscando...")
     delay(1)  # Simular carga
-    
+
     pelicula = buscar_pelicula_omdb(titulo)
     mostrar_pelicula(pelicula)
-    
+
     if pelicula:
         HISTORIAL.append(pelicula.get("Title"))
         opcion = input("\n¿Agregar a favoritos? (s/n): ")
         if opcion.lower() == "s":
             PELICULAS_FAVORITAS.append(pelicula)
             print("Agregada a favoritos!")
-    
+
     input("\nPresione Enter para continuar...")
 
 def funcion_buscar_actor():
     actor = input("Ingrese el nombre del actor: ")
     print("Buscando películas del actor...")
-    
+
     peliculas = buscar_peliculas_por_actor(actor)
-    
+
     if len(peliculas) > 0:
         i = 0
         while i < len(peliculas):
             print(str(i + 1) + ". " + peliculas[i].get("Title", "") + " (" + peliculas[i].get("Year", "") + ")")
             i += 1
-        
+
         opcion = input("\nSeleccione una película para ver detalles (0 para volver): ")
         if opcion.isdigit() and int(opcion) > 0:
             indice = int(opcion) - 1
@@ -187,22 +186,22 @@ def funcion_buscar_actor():
                 mostrar_pelicula(detalles)
     else:
         print("No se encontraron películas para ese actor")
-    
+
     input("\nPresione Enter para continuar...")
 
 def funcion_buscar_series():
     nombre = input("Ingrese el nombre de la serie: ")
     print("Buscando series...")
-    
+
     series = buscar_series_tvmaze(nombre)
-    
+
     if len(series) > 0:
         i = 0
         while i < len(series):
             show = series[i].get("show", {})
             print(str(i + 1) + ". " + show.get("name", "") + " (" + show.get("status", "") + ")")
             i += 1
-        
+
         opcion = input("\nSeleccione una serie para ver detalles (0 para volver): ")
         if opcion.isdigit() and int(opcion) > 0:
             indice = int(opcion) - 1
@@ -212,7 +211,7 @@ def funcion_buscar_series():
                 mostrar_serie(detalles)
     else:
         print("No se encontraron series")
-    
+
     input("\nPresione Enter para continuar...")
 
 def funcion_peliculas_populares():

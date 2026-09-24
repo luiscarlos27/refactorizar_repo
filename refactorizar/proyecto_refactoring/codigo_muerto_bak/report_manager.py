@@ -1,6 +1,5 @@
-import os
 import json
-import time
+import os
 from datetime import datetime
 
 # Variables globales
@@ -10,9 +9,9 @@ reports = []
 def load_reports():
     """Carga reportes"""
     global reports
-    
+
     if os.path.exists(REPORT_FILE):
-        with open(REPORT_FILE, 'r') as f:
+        with open(REPORT_FILE) as f:
             reports = json.load(f)
     else:
         reports = []
@@ -78,11 +77,11 @@ def search_reports(query):
     """Busca reportes"""
     results = []
     query_lower = query.lower()
-    
+
     for report in reports:
         if query_lower in report.get("title", "").lower():
             results.append(report)
-    
+
     return results
 
 def generate_report(report_id):
@@ -109,16 +108,16 @@ def get_report_stats():
         "pending": 0,
         "by_type": {}
     }
-    
+
     for report in reports:
         if report.get("generated"):
             stats["generated"] += 1
         else:
             stats["pending"] += 1
-        
+
         report_type = report.get("type", "unknown")
         stats["by_type"][report_type] = stats["by_type"].get(report_type, 0) + 1
-    
+
     return stats
 
 def export_reports(filename):
@@ -129,9 +128,9 @@ def export_reports(filename):
 def import_reports(filename):
     """Importa reportes"""
     global reports
-    
+
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename) as f:
             reports = json.load(f)
         save_reports()
         return True
@@ -140,13 +139,13 @@ def import_reports(filename):
 def validate_reports():
     """Valida integridad de reportes"""
     errors = []
-    
+
     for i, report in enumerate(reports):
         if "id" not in report:
             errors.append("Report " + str(i) + " missing id")
         if "title" not in report:
             errors.append("Report " + str(i) + " missing title")
-    
+
     return errors
 
 def backup_reports():
