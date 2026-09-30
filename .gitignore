@@ -3,3 +3,28 @@ __pycache__/
 .opencode/
 *.log
 .coverage
+
+# Graphify: artefactos locales no commit-safe
+.graphify/manifest.json
+.graphify/branch.json
+.graphify/worktree.json
+.graphify/needs_update
+.graphify/cache/
+.graphify/scope.json
+.graphify/.graphify_detect.json
+.graphify/.graphify_labels.json
+
+# Skills propias del proyecto (Parte 2 del ejercicio), dentro de la copia local
+# de la libreria opencode-skills. Git no puede re-incluir archivos si su
+# directorio padre esta excluido, asi que se reabre la cadena nivel por nivel.
+!refactorizar/opencode-skills/
+refactorizar/opencode-skills/*
+!refactorizar/opencode-skills/opencode-skills-main/
+refactorizar/opencode-skills/opencode-skills-main/*
+!refactorizar/opencode-skills/opencode-skills-main/.opencode/
+refactorizar/opencode-skills/opencode-skills-main/.opencode/*
+!refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/
+refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/*
+!refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/refactoring-code-smells/
+!refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/api-integration-rest/
+!refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/pytest-testing-automation/

@@ -105,6 +105,16 @@ El proyecto tiene **66 skills** de opencode instaladas localmente que guían la 
 
 > Las skills instaladas provienen de la librería **[jeffallan/opencode-skills](https://github.com/jeffallan/opencode-skills)** (v0.5.0, 66 skills). La carpeta local `.opencode/` queda excluida del control de versiones (`.gitignore`).
 
+### Skills propias del proyecto (Parte 2 del ejercicio)
+
+Creadas junto a la librería en `refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/`, con el formato válido de opencode (`<nombre>/SKILL.md` + `references/`) y versionadas mediante excepciones en `.gitignore`. Detalle en [`refactorizar/proyecto_refactoring/proyecto_refactoring/SKILL.md`](refactorizar/proyecto_refactoring/proyecto_refactoring/SKILL.md).
+
+| Skill | Uso en el proyecto |
+|---|---|
+| `refactoring-code-smells` | Detección verificable de smells (ruff/mypy/pytest), refactor incremental con quality gate y cuarentena de código muerto |
+| `api-integration-rest` | Clientes REST robustos con el stack real (`requests` + `tenacity` + `pybreaker`): timeouts, backoff, circuit breaker, excepciones de dominio |
+| `pytest-testing-automation` | Suite pytest con fixtures, parametrización, mock de APIs (`pytest-mock`) y cobertura ≥ 90 % |
+
 ---
 
 ## 4. Flujo de desarrollo: SDD + OpenSpec
@@ -305,5 +315,6 @@ python benchmark_payroll.py             # Benchmark comparativo
 | 4 — Manejo de errores | `fase-4-manejo-errores` | Archivado |
 | 5 — Seguridad | `fase-5-seguridad` | Archivado |
 | 6 — Testing | `fase-6-testing` | Archivado |
+| Parte 2 — Skills | 3 skills propias (`refactoring-code-smells`, `api-integration-rest`, `pytest-testing-automation`) | Completado |
 
 📈 [Informe ejecutivo fases 1-4](refactorizar/proyecto_refactoring/docs/informe-ejecutivo.md): qué se realizó y qué se mejoró.

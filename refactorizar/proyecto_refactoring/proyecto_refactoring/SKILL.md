@@ -1,112 +1,86 @@
 # SKILLS PARA OPENCODE
 
-## Que es un Skill?
+Las 3 skills del proyecto viven en el mismo directorio que la libreria de skills
+instalada, con el formato valido de opencode: una carpeta por skill con su
+`SKILL.md` (frontmatter `name` + `description`) y guias de detalle en
+`references/`.
 
-Un skill es un conjunto de instrucciones que le dan a un agente IA como opencode
-habilidades especializadas para tareas especificas.
-
-## Estructura de un Skill
-
+```text
+refactorizar/opencode-skills/opencode-skills-main/.opencode/skills/
+├── refactoring-code-smells/
+│   ├── SKILL.md
+│   └── references/
+│       ├── deteccion.md          # smell -> comando de deteccion -> tecnica
+│       └── quality-gate.md       # ruff + mypy --strict + pytest + compileall
+├── api-integration-rest/
+│   ├── SKILL.md
+│   └── references/
+│       ├── retry-y-breaker.md    # reintentable/no reintentable, backoff, breaker
+│       └── errores-y-secretos.md # excepciones de dominio, claves, degradacion
+└── pytest-testing-automation/
+    ├── SKILL.md
+    └── references/
+        ├── fixtures-y-mocks.md   # yield, scopes, factories, mock de HTTP
+        └── cobertura-y-ci.md     # umbral 90 %, informes, casos limite
 ```
-.opencode/skills/
-  nombre-skill/
-    skill.json
-    instrucciones.md
+
+## Los 3 skills
+
+| Skill | Proposito | Triggers |
+|---|---|---|
+| `refactoring-code-smells` | Eliminar malas practicas (code smells), estado global y duplicacion, sin alterar el comportamiento; exige quality gate | "refactorizar codigo", "quitar variables globales", "limpiar code smells" |
+| `api-integration-rest` | Clientes REST robustos en Python: timeouts, reintentos con backoff, circuit breaker, cache con TTL, excepciones de dominio | "conectar a una API", "crear cliente REST", "manejar reintentos HTTP" |
+| `pytest-testing-automation` | Suites pytest con fixtures, parametrizacion, mock de APIs y cobertura >= 90 % | "crear tests unitarios", "mockear llamadas HTTP", "medir cobertura" |
+
+## Formato valido de un skill
+
+```text
+.opencode/skills/nombre-skill/SKILL.md
 ```
 
-## Los 3 Skills a Crear
+```markdown
+---
+name: nombre-skill
+description: Que hace y cuando usarlo, con los triggers literales primero.
+---
 
-### SKILL 1: Refactoring
+# Titulo del skill
 
-**Proposito**: Eliminar malas practicas del codigo y mejorar su estructura.
+(instrucciones en markdown)
+```
 
-**Archivo**: `.opencode/skills/refactoring/skill.json`
+Reglas del formato (opencode escanea `**/SKILL.md` dentro de los directorios de
+skills registrados):
+
+- `name` es obligatorio, en minusculas con guiones, y debe coincidir con el
+  nombre de la carpeta.
+- `description` es efectivamente obligatorio: sin ella la skill no se muestra.
+- `allowed-tools` **no** es un campo valido del frontmatter de skills en opencode
+  (es sintaxis de otra herramienta). Las capacidades se controlan con
+  `permission` en `opencode.json`, no en el skill.
+
+## Como se cargan
+
+Las skills se registran en `.opencode/opencode.json` del workspace:
 
 ```json
 {
-  "name": "refactoring",
-  "description": "Refactorizar codigo Python con malas practicas",
-  "instructions": "instrucciones.md"
+  "skills": {
+    "paths": ["refactorizar/opencode-skills/opencode-skills-main/.opencode/skills"]
+  }
 }
 ```
 
-**Contenido de instrucciones.md**:
+1. opencode las detecta al iniciar (reiniciar tras cualquier cambio).
+2. Se invocan con `/skill nombre-del-skill` o las activa el agente cuando el
+   mensaje coincide con sus triggers.
+3. Las skills instaladas de la libreria (66) conviven con estas 3 sin conflicto:
+   los nombres no se repiten.
 
-- Buscar y eliminar variables globales
-- Reemplazar wildcard imports por imports especificos
-- Convertir concatenacion de strings a f-strings
-- Agregar type hints a funciones
-- Separar responsabilidades en modulos
-- Eliminar codigo duplicado
-- Reemplazar bare except por excepciones especificas
-- Crear dataclasses para modelos de datos
-- Implementar inyeccion de dependencias
+## Versionado
 
----
-
-### SKILL 2: API Integration
-
-**Proposito**: Conectar a APIs REST de forma robusta y mantenible.
-
-**Archivo**: `.opencode/skills/api-integration/skill.json`
-
-```json
-{
-  "name": "api-integration",
-  "description": "Integrar APIs REST en Python",
-  "instructions": "instrucciones.md"
-}
-```
-
-**Contenido de instrucciones.md**:
-
-- Crear clientes para cada API
-- Implementar cache de respuestas
-- Agregar reintentos con backoff exponencial
-- Manejar rate limiting
-- Validar respuestas con pydantic o dataclasses
-- Logging de requests y responses
-- Timeouts configurables
-- Manejo de errores HTTP
-
----
-
-### SKILL 3: Testing
-
-**Proposito**: Crear tests automaticos para validar el codigo.
-
-**Archivo**: `.opencode/skills/testing/skill.json`
-
-```json
-{
-  "name": "testing",
-  "description": "Crear tests con pytest",
-  "instructions": "instrucciones.md"
-}
-```
-
-**Contenido de instrucciones.md**:
-
-- Estructura de tests/ con pytest
-- Tests unitarios para servicios
-- Mock de APIs externas con pytest-mock
-- Fixtures para datos de prueba
-- Parametrizacion de tests
-- Coverage con pytest-cov
-- Tests de integracion
-- Arrange-Act-Assert pattern
-
----
-
-## Como Usar los Skills
-
-1. Crear directorio `.opencode/skills/`
-2. Para cada skill, crear subdirectorio con skill.json e instrucciones.md
-3. opencode cargara automaticamente los skills al iniciar
-4. Usar el skill con: `/skill nombre-del-skill`
-
-## Referencias
-
-- Opencode docs: https://opencode.ai
-- Python typing: https://docs.python.org/3/library/typing.html
-- Pytest: https://docs.pytest.org/
+- El `.gitignore` del workspace excluye `.opencode/` en cualquier nivel, asi que
+  las 3 skills propias se versionan mediante una cadena de excepciones en
+  `.gitignore` (solo sus carpetas, no el resto de la libreria).
+- Verificar con `git check-ignore -v <ruta>/SKILL.md`: sin salida significa que
+  el archivo es versionable.
